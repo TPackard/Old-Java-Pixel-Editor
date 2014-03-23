@@ -19,6 +19,7 @@ public class ColorChooser extends JPanel {
 
 
 	public ColorChooser(Window parent) {
+		super();
 		this.parent = parent;
 		parent.add(this);
 		setSize(192, 224);
@@ -29,9 +30,9 @@ public class ColorChooser extends JPanel {
 		setFocusable(false);
 		typeSwitch = new Switch("HSB", "RGB", 60, 16, 72, 16, true);
 		add(typeSwitch);
-		slider1 = new ColorSlider(this, 16, 48, "Hue", 360);
-		slider2 = new ColorSlider(this, 16, 80, "Saturation", 100);
-		slider3 = new ColorSlider(this, 16, 112, "Brightness", 100);
+		slider1 = new ColorSlider(this, 10, 48, "Hue", 360);
+		slider2 = new ColorSlider(this, 10, 80, "Saturation", 100);
+		slider3 = new ColorSlider(this, 10, 112, "Brightness", 100);
 		preview = new ColorPreview(this, 152);
 		foreground = new Color(0xFFFFFF);
 		background = new Color(0);
@@ -53,17 +54,17 @@ public class ColorChooser extends JPanel {
 	}
 
 	public void updateColor() {
-		int color;
+		Color color;
 		if (typeSwitch.getState()) {
-			color = Color.HSBtoRGB(slider1.getValue(), slider2.getValue(), slider3.getValue());
+			color = new Color(Color.HSBtoRGB(slider1.getValue(), slider2.getValue(), slider3.getValue()));
 		} else {
-			color = new Color(slider1.getValue(), slider2.getValue(), slider3.getValue()).getRGB();
+			color = new Color(slider1.getValue(), slider2.getValue(), slider3.getValue());
 		}
 
 		if (foreSelected) {
-			foreground = new Color(color);
+			foreground = color;
 		} else {
-			background = new Color(color);
+			background = color;
 		}
 	}
 
@@ -114,5 +115,24 @@ public class ColorChooser extends JPanel {
 			slider3.setToolTipText("Blue");
 		}
 		setForeSelected(foreSelected);
+	}
+
+	Color colorAt(float value, ColorSlider slider) {
+		float value1 = slider1.getValue();
+		float value2 = slider2.getValue();
+		float value3 = slider3.getValue();
+		if (slider.equals(slider1)) {
+			value1 = value;
+		} else if (slider.equals(slider2)) {
+			value2 = value;
+		} else if (slider.equals(slider3)) {
+			value3 = value;
+		}
+
+		if (typeSwitch.getState()) {
+			return new Color(Color.HSBtoRGB(value1, value2, value3));
+		} else {
+			return new Color(value1, value2, value3);
+		}
 	}
 }

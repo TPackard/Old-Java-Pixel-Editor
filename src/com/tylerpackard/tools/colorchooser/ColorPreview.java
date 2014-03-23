@@ -5,15 +5,14 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-class ColorPreview extends JComponent implements MouseListener{
+class ColorPreview extends JPanel implements MouseListener{
 	private final ColorChooser parent;
 
 	public ColorPreview(ColorChooser parent, int y) {
+		super();
 		this.parent = parent;
 		parent.add(this);
 		setBounds(46, y, 100, 64);
-		setVisible(true);
-		setOpaque(true);
 		addMouseListener(this);
 	}
 
