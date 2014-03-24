@@ -1,20 +1,21 @@
 package com.tylerpackard.tools.colorchooser;
 
 import com.tylerpackard.ui.Switch;
+import com.tylerpackard.ui.Updatable;
 import com.tylerpackard.ui.Window;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class ColorChooser extends JPanel {
+public class ColorChooser extends JPanel implements Updatable{
 	private Window parent;
-	private final Switch typeSwitch;
-	private final ColorSlider slider1;
-	private final ColorSlider slider2;
-	private final ColorSlider slider3;
-	private final ColorPreview preview;
-	private Color foreground;
-	private Color background;
+	private final Switch typeSwitch = new Switch("HSB", "RGB", 60, 16, 72, 16, true);
+	private final ColorSlider slider1 = new ColorSlider(this, 10, 48, "Hue", 360);
+	private final ColorSlider slider2 = new ColorSlider(this, 10, 80, "Saturation", 100);
+	private final ColorSlider slider3 = new ColorSlider(this, 10, 112, "Brightness", 100);
+	private final ColorPreview preview = new ColorPreview(this, 152);
+	private Color foreground = new Color(0xFFFFFF);
+	private Color background = new Color(0x000000);
 	boolean foreSelected = true;
 
 
@@ -23,23 +24,18 @@ public class ColorChooser extends JPanel {
 		this.parent = parent;
 		parent.add(this);
 		setSize(192, 224);
-		setLocation(0, parent.getHeight() - getHeight());
+		setLocation(0, parent.height() - getHeight());
 		setVisible(true);
 		setOpaque(true);
 		setBackground(new Color(0xEEEEF2));
 		setFocusable(false);
-		typeSwitch = new Switch("HSB", "RGB", 60, 16, 72, 16, true);
 		add(typeSwitch);
-		slider1 = new ColorSlider(this, 10, 48, "Hue", 360);
-		slider2 = new ColorSlider(this, 10, 80, "Saturation", 100);
-		slider3 = new ColorSlider(this, 10, 112, "Brightness", 100);
-		preview = new ColorPreview(this, 152);
-		foreground = new Color(0xFFFFFF);
-		background = new Color(0);
 		setForeSelected(true);
 		setLayout(null);
 	}
 
+
+	@Override
 	public void update() {
 		typeSwitch.update();
 		if (typeSwitch.flagged()) {
@@ -49,7 +45,7 @@ public class ColorChooser extends JPanel {
 		slider2.update();
 		slider3.update();
 		preview.update();
-		setLocation(0, parent.getHeight() - getHeight());
+		setLocation(0, parent.height() - getHeight());
 		repaint();
 	}
 
@@ -74,6 +70,14 @@ public class ColorChooser extends JPanel {
 
 	public Color getBackgroundColor() {
 		return background;
+	}
+
+	public Color getColor() {
+		if (foreSelected) {
+			return foreground;
+		} else {
+			return background;
+		}
 	}
 
 	public void setForeSelected(boolean foreSelected) {
