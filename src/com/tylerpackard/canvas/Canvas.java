@@ -32,6 +32,8 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 		setOpaque(false);
 		addMouseListener(this);
 		addMouseMotionListener(this);
+		setFocusable(true);
+		reposition();
 	}
 
 
@@ -73,6 +75,11 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 
 	@Override
 	public void update() {
+
+	}
+
+	@Override
+	public void reposition() {
 		setSize(parent.getWidth() - 192, parent.height());
 		imageX = getWidth() / 2 - image.getWidth() / 2;
 		imageY = getHeight() / 2 - image.getHeight() / 2;
@@ -89,6 +96,7 @@ public class Canvas extends JPanel implements MouseListener, MouseMotionListener
 		mouseY = e.getY();
 		imageG.setColor(colorChooser.getColor());
 		imageG.fillRect(mouseX - imageX, mouseY - imageY, 1, 1);
+		colorChooser.defocus();
 		repaint();
 	}
 

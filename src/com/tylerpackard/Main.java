@@ -10,7 +10,6 @@ class Main implements Runnable{
 	private Window window;
 	private ColorChooser colorChooser;
 	private Canvas canvas;
-	private ArrayList<Updatable> updatables = new ArrayList<Updatable>();
 
 
 	public static void main(String[] args) {
@@ -21,22 +20,23 @@ class Main implements Runnable{
 	public void run() {
 		// This all happens once when the program starts
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
+		System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Crisp");
 
 		window = new Window(720, 480);
 		colorChooser = new ColorChooser(window);
 		canvas = new Canvas(window, colorChooser);
 
-		updatables.add(colorChooser);
-		updatables.add(canvas);
-
 		while (true) {
 			loop();
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	void loop() {
-		for (Updatable updatable : updatables) {
-			updatable.update();
-		}
+		window.update();
 	}
 }

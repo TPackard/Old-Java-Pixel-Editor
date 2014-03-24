@@ -5,6 +5,7 @@ import com.tylerpackard.ui.TextField;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 
 class ColorSlider extends JPanel implements MouseListener, MouseMotionListener {
 	private final ColorChooser parent;
@@ -28,6 +29,8 @@ class ColorSlider extends JPanel implements MouseListener, MouseMotionListener {
 	private final int[] arrowY2;
 	private int[] sliderXPoints;
 	private final int[] sliderYPoints = new int[] {4, 0, 0, 4, 12, 15, 15, 12};
+	private BufferedImage bar;
+	private Graphics barG;
 
 
 	public ColorSlider(ColorChooser parent, int x, int y, String toolTip, final int limit) {
@@ -35,6 +38,8 @@ class ColorSlider extends JPanel implements MouseListener, MouseMotionListener {
 		this.parent = parent;
 		parent.add(this);
 		setBounds(x, y, 172, 18);
+		bar = new BufferedImage(barEnd - barStart, 8, BufferedImage.TYPE_INT_ARGB);
+		barG = bar.getGraphics();
 		setVisible(true);
 		setOpaque(false);
 		setFocusable(true);
@@ -64,20 +69,27 @@ class ColorSlider extends JPanel implements MouseListener, MouseMotionListener {
 
 	public void update() {
 		updateMouse();
-		repaint();
 	}
 
 	private void updateMouse() {
-		if (mouseDown && System.nanoTime() - lastMouseUpdate >= 100000000) {
+		if (mouseDown && System.nanoTime() - lastMouseUpdate >= 200000000) {
 			if (mouseX >= arrowX[0]) {
-				if (mouseY <= 8 && value < limit) {
-					value++;
-					textField.setText(Integer.toString(value));
-					parent.updateColor();
-				} else if (mouseY >= 12 && value > 0) {
-					value--;
-					textField.setText(Integer.toString(value));
-					parent.updateColor();
+				if (mouseY <= 8) {
+					if (value < limit) {
+						value++;
+						textField.setText(Integer.toString(value));
+						parent.updateColor();
+					} else {
+						Toolkit.getDefaultToolkit().beep();
+					}
+				} else if (mouseY >= 12) {
+					if (value > 0) {
+						value--;
+						textField.setText(Integer.toString(value));
+						parent.updateColor();
+					} else {
+						Toolkit.getDefaultToolkit().beep();
+					}
 				}
 			}
 			lastMouseUpdate = System.nanoTime();
@@ -129,6 +141,11 @@ class ColorSlider extends JPanel implements MouseListener, MouseMotionListener {
 		};
 	}
 
+	public void defocus() {
+		textField.setFocusable(false);
+		textField.setFocusable(true);
+	}
+
 	@Override
 	public void setToolTipText(String text) {
 		super.setToolTipText(text);
@@ -139,12 +156,7 @@ class ColorSlider extends JPanel implements MouseListener, MouseMotionListener {
 	public void paint(Graphics g) {
 		super.paint(g);
 
-		/* BAR */
-		final int sliverWidth = 3;
-		for (int i = 0; i < barEnd - barStart; i += sliverWidth) {
-			g.setColor(parent.colorAt((i / (float)scale) / (float)doubleLimit, this));
-			g.fillRect(i + barStart, 4, sliverWidth, 8);
-		}
+		g.drawImage(bar, barStart, 4, null);
 
 		/* SLIDER */
 		g.setColor(new Color(0x444448));
@@ -156,6 +168,14 @@ class ColorSlider extends JPanel implements MouseListener, MouseMotionListener {
 		/* ARROWS */
 		g.fillPolygon(arrowX, arrowY1, 3);
 		g.fillPolygon(arrowX, arrowY2, 3);
+	}
+
+	public void paintBar() {
+		final int sliverWidth = 3;
+		for (int i = 0; i < barEnd - barStart; i += sliverWidth) {
+			barG.setColor(parent.colorAt((i / (float) scale) / (float) doubleLimit, this));
+			barG.fillRect(i, 0, sliverWidth, 8);
+		}
 	}
 
 	@Override

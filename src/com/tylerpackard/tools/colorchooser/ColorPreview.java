@@ -18,7 +18,7 @@ class ColorPreview extends JPanel implements MouseListener{
 
 
 	public void update() {
-		repaint();
+
 	}
 
 	@Override

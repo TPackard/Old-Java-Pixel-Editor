@@ -44,7 +44,7 @@ public class Switch extends JPanel implements MouseListener{
 
 
 	public void update() {
-		repaint();
+
 	}
 
 	public boolean getState() {

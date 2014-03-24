@@ -14,8 +14,8 @@ public class ColorChooser extends JPanel implements Updatable{
 	private final ColorSlider slider2 = new ColorSlider(this, 10, 80, "Saturation", 100);
 	private final ColorSlider slider3 = new ColorSlider(this, 10, 112, "Brightness", 100);
 	private final ColorPreview preview = new ColorPreview(this, 152);
-	private Color foreground = new Color(0xFFFFFF);
-	private Color background = new Color(0x000000);
+	private Color foreground = new Color(0x000000);
+	private Color background = new Color(0xFFFFFF);
 	boolean foreSelected = true;
 
 
@@ -37,16 +37,17 @@ public class ColorChooser extends JPanel implements Updatable{
 
 	@Override
 	public void update() {
-		typeSwitch.update();
 		if (typeSwitch.flagged()) {
 			switchType();
 		}
 		slider1.update();
 		slider2.update();
 		slider3.update();
-		preview.update();
+	}
+
+	@Override
+	public void reposition() {
 		setLocation(0, parent.height() - getHeight());
-		repaint();
 	}
 
 	public void updateColor() {
@@ -62,6 +63,12 @@ public class ColorChooser extends JPanel implements Updatable{
 		} else {
 			background = color;
 		}
+
+		slider1.paintBar();
+		slider2.paintBar();
+		slider3.paintBar();
+
+		repaint();
 	}
 
 	public Color getForegroundColor() {
@@ -138,5 +145,11 @@ public class ColorChooser extends JPanel implements Updatable{
 		} else {
 			return new Color(value1, value2, value3);
 		}
+	}
+
+	public void defocus() {
+		slider1.defocus();
+		slider2.defocus();
+		slider3.defocus();
 	}
 }
