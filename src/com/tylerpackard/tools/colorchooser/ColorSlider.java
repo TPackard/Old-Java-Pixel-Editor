@@ -29,6 +29,7 @@ class ColorSlider extends JPanel implements MouseListener, MouseMotionListener {
 	private final int[] arrowY2 = new int[]{10, 16, 10};
 	private final int[] sliderYPoints = new int[] {4, 0, 0, 4, 12, 15, 15, 12};
 	private BufferedImage bar;
+	private BufferedImage barBackground;
 	private Graphics barG;
 
 
@@ -39,6 +40,7 @@ class ColorSlider extends JPanel implements MouseListener, MouseMotionListener {
 		setBounds(x, y, 172, 18);
 		bar = new BufferedImage(barEnd - barStart, 8, BufferedImage.TYPE_INT_ARGB);
 		barG = bar.getGraphics();
+		makeBarBackground();
 		setVisible(true);
 		setOpaque(false);
 		setFocusable(true);
@@ -46,6 +48,7 @@ class ColorSlider extends JPanel implements MouseListener, MouseMotionListener {
 		addMouseMotionListener(this);
 		setLayout(null);
 		setLimit(limit);
+		setCursor(new Cursor(Cursor.HAND_CURSOR));
 
 		textField.setBounds(barEnd + 8, 0, 34, 16);
 		textField.setFont(new Font("SansSerif", Font.PLAIN, 10));
@@ -169,9 +172,29 @@ class ColorSlider extends JPanel implements MouseListener, MouseMotionListener {
 
 	public void paintBar() {
 		final int sliverWidth = 3;
+		barG.drawImage(barBackground, 0, 0, null);
 		for (int i = 0; i < barEnd - barStart; i += sliverWidth) {
 			barG.setColor(parent.colorAt((i / (float) scale) / (float) doubleLimit, this));
 			barG.fillRect(i, 0, sliverWidth, 8);
+		}
+	}
+
+	public void makeBarBackground() {
+		barBackground = new BufferedImage(barEnd - barStart, 8, BufferedImage.TYPE_INT_ARGB);
+		int width = barBackground.getWidth();
+		int height = barBackground.getHeight();
+
+		Graphics g = barBackground.getGraphics();
+		g.setColor(new Color(0xCCCCD2));
+		g.fillRect(0, 0, width, 8);
+
+		int squareSize = 4;
+		g.setColor(Color.WHITE);
+		for (int x = 0; x < width; x += squareSize * 2) {
+			for (int y = 0; y < height; y += squareSize * 2) {
+				g.fillRect(x, y, squareSize, squareSize);
+				g.fillRect(x + squareSize, y + squareSize, squareSize, squareSize);
+			}
 		}
 	}
 

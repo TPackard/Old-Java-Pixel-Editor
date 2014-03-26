@@ -11,8 +11,9 @@ public class ColorChooser extends JPanel implements Updatable{
 	private Window parent;
 	private final Switch typeSwitch = new Switch("HSB", "RGB", 60, 16, 72, 16, true);
 	private final ColorSlider slider1 = new ColorSlider(this, 10, 48, "Hue", 360);
-	private final ColorSlider slider2 = new ColorSlider(this, 10, 80, "Saturation", 100);
-	private final ColorSlider slider3 = new ColorSlider(this, 10, 112, "Brightness", 100);
+	private final ColorSlider slider2 = new ColorSlider(this, 10, 72, "Saturation", 100);
+	private final ColorSlider slider3 = new ColorSlider(this, 10, 96, "Brightness", 100);
+	private final ColorSlider sliderA = new ColorSlider(this, 10, 120, "Alpha", 100);
 	private final ColorPreview preview = new ColorPreview(this, 152);
 	private Color foreground = new Color(0x000000);
 	private Color background = new Color(0xFFFFFF);
@@ -42,6 +43,7 @@ public class ColorChooser extends JPanel implements Updatable{
 		slider1.update();
 		slider2.update();
 		slider3.update();
+		sliderA.update();
 	}
 
 	@Override
@@ -51,10 +53,12 @@ public class ColorChooser extends JPanel implements Updatable{
 
 	public void updateColor() {
 		Color color;
+
 		if (typeSwitch.getState()) {
-			color = new Color(Color.HSBtoRGB(slider1.getValue(), slider2.getValue(), slider3.getValue()));
+			float[] rgb = Color.getHSBColor(slider1.getValue(), slider2.getValue(), slider3.getValue()).getRGBColorComponents(null);
+			color = new Color(rgb[0], rgb[1], rgb[2], sliderA.getValue());
 		} else {
-			color = new Color(slider1.getValue(), slider2.getValue(), slider3.getValue());
+			color = new Color(slider1.getValue(), slider2.getValue(), slider3.getValue(), sliderA.getValue());
 		}
 
 		if (foreSelected) {
@@ -66,6 +70,7 @@ public class ColorChooser extends JPanel implements Updatable{
 		slider1.paintBar();
 		slider2.paintBar();
 		slider3.paintBar();
+		sliderA.paintBar();
 
 		repaint();
 	}
@@ -106,6 +111,7 @@ public class ColorChooser extends JPanel implements Updatable{
 			slider2.setValue(color.getGreen() / 255.0);
 			slider3.setValue(color.getBlue() / 255.0);
 		}
+		sliderA.setValue(color.getAlpha() / 255.0);
 	}
 
 	void switchType() {
@@ -131,18 +137,22 @@ public class ColorChooser extends JPanel implements Updatable{
 		float value1 = slider1.getValue();
 		float value2 = slider2.getValue();
 		float value3 = slider3.getValue();
+		float valueA = sliderA.getValue();
 		if (slider.equals(slider1)) {
 			value1 = value;
 		} else if (slider.equals(slider2)) {
 			value2 = value;
 		} else if (slider.equals(slider3)) {
 			value3 = value;
+		} else if (slider.equals(sliderA)) {
+			valueA = value;
 		}
 
 		if (typeSwitch.getState()) {
-			return new Color(Color.HSBtoRGB(value1, value2, value3));
+			float[] rgb = Color.getHSBColor(value1, value2, value3).getRGBColorComponents(null);
+			return new Color(rgb[0], rgb[1], rgb[2], valueA);
 		} else {
-			return new Color(value1, value2, value3);
+			return new Color(value1, value2, value3, valueA);
 		}
 	}
 
@@ -150,5 +160,6 @@ public class ColorChooser extends JPanel implements Updatable{
 		slider1.defocus();
 		slider2.defocus();
 		slider3.defocus();
+		sliderA.defocus();
 	}
 }
