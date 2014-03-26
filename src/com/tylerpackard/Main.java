@@ -8,8 +8,6 @@ import java.util.ArrayList;
 
 class Main implements Runnable{
 	private Window window;
-	private ColorChooser colorChooser;
-	private Canvas canvas;
 
 
 	public static void main(String[] args) {
@@ -20,23 +18,25 @@ class Main implements Runnable{
 	public void run() {
 		// This all happens once when the program starts
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
-		System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Crisp");
+		System.setProperty("com.apple.mrj.application.apple.menu.about.name", "App Name");
 
 		window = new Window(720, 480);
-		colorChooser = new ColorChooser(window);
-		canvas = new Canvas(window, colorChooser);
 
 		while (true) {
 			loop();
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			sleep(10);
 		}
 	}
 
 	void loop() {
 		window.update();
+	}
+
+	public static void sleep(long milliseconds) {
+		try {
+			Thread.sleep(milliseconds);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -25,9 +25,8 @@ class ColorSlider extends JPanel implements MouseListener, MouseMotionListener {
 	private int mouseY;
 	private long lastMouseUpdate = 0;
 	private final int[] arrowX;
-	private final int[] arrowY1;
-	private final int[] arrowY2;
-	private int[] sliderXPoints;
+	private final int[] arrowY1 = new int[]{6, 0, 6};
+	private final int[] arrowY2 = new int[]{10, 16, 10};
 	private final int[] sliderYPoints = new int[] {4, 0, 0, 4, 12, 15, 15, 12};
 	private BufferedImage bar;
 	private Graphics barG;
@@ -62,8 +61,6 @@ class ColorSlider extends JPanel implements MouseListener, MouseMotionListener {
 		setToolTipText(toolTip);
 
 		arrowX = new int[] {getWidth() - 12, getWidth() - 6, getWidth()};
-		arrowY1 = new int[]{6, 0, 6};
-		arrowY2 = new int[]{10, 16, 10};
 	}
 
 
@@ -162,7 +159,7 @@ class ColorSlider extends JPanel implements MouseListener, MouseMotionListener {
 		g.setColor(new Color(0x444448));
 		int point = (int)Math.round(value * scale) + barStart;
 		int offset = barWidth / 2;
-		sliderXPoints = new int[] {point, point - offset, point + offset, point, point, point - offset + 1, point + offset - 1, point};
+		int[] sliderXPoints = new int[]{point, point - offset, point + offset, point, point, point - offset + 1, point + offset - 1, point};
 		g.fillPolygon(sliderXPoints, sliderYPoints, 8);
 
 		/* ARROWS */

@@ -22,7 +22,6 @@ public class ColorChooser extends JPanel implements Updatable{
 	public ColorChooser(Window parent) {
 		super();
 		this.parent = parent;
-		parent.add(this);
 		setSize(192, 224);
 		setLocation(0, parent.height() - getHeight());
 		setVisible(true);
