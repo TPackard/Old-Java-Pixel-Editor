@@ -1,4 +1,4 @@
-package com.tylerpackard.tools.colorchooser;
+package com.tylerpackard.toolbox.colorchooser;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +14,7 @@ class ColorPreview extends JPanel implements MouseListener{
 		parent.add(this);
 		setBounds(46, y, 100, 64);
 		addMouseListener(this);
+		setCursor(new Cursor(Cursor.HAND_CURSOR));
 	}
 
 

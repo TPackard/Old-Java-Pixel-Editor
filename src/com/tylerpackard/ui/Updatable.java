@@ -4,4 +4,6 @@ public interface Updatable {
 	void update();
 
 	void reposition();
+
+	void defocus();
 }

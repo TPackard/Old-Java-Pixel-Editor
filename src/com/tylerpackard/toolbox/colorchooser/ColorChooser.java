@@ -1,4 +1,4 @@
-package com.tylerpackard.tools.colorchooser;
+package com.tylerpackard.toolbox.colorchooser;
 
 import com.tylerpackard.ui.Switch;
 import com.tylerpackard.ui.Updatable;
@@ -23,7 +23,7 @@ public class ColorChooser extends JPanel implements Updatable{
 	public ColorChooser(Window parent) {
 		super();
 		this.parent = parent;
-		setSize(192, 224);
+		setSize(parent.getLeftWidth(), 224);
 		setLocation(0, parent.height() - getHeight());
 		setVisible(true);
 		setOpaque(true);
@@ -156,6 +156,7 @@ public class ColorChooser extends JPanel implements Updatable{
 		}
 	}
 
+	@Override
 	public void defocus() {
 		slider1.defocus();
 		slider2.defocus();

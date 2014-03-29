@@ -1,10 +1,6 @@
 package com.tylerpackard;
 
-import com.tylerpackard.canvas.Canvas;
-import com.tylerpackard.tools.colorchooser.ColorChooser;
 import com.tylerpackard.ui.*;
-
-import java.util.ArrayList;
 
 class Main implements Runnable{
 	private Window window;

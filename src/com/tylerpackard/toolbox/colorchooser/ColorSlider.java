@@ -1,4 +1,4 @@
-package com.tylerpackard.tools.colorchooser;
+package com.tylerpackard.toolbox.colorchooser;
 
 import com.tylerpackard.ui.TextField;
 

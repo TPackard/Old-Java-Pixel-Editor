@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import com.apple.eawt.AppEvent.FullScreenEvent;
 import com.apple.eawt.FullScreenListener;
 import com.tylerpackard.canvas.Canvas;
-import com.tylerpackard.tools.colorchooser.ColorChooser;
+import com.tylerpackard.toolbox.colorchooser.ColorChooser;
+import com.tylerpackard.toolbox.toolchooser.ToolChooser;
 
 import static com.apple.eawt.FullScreenUtilities.*;
 
@@ -22,6 +23,10 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 	private final JFrame frame;
 	private final JFileChooser fileChooser = new JFileChooser();
 	private final Canvas canvas;
+	private final ColorChooser colorChooser;
+	private final ToolChooser toolChooser;
+	private int leftWidth = 192;
+	private int rightWidth = 48;
 
 
 	public Window(int width, int height) {
@@ -39,9 +44,11 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 		frame.setFocusable(true);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-		ColorChooser colorChooser = new ColorChooser(this);
-		canvas = new Canvas(this, colorChooser);
+		colorChooser = new ColorChooser(this);
+		toolChooser = new ToolChooser(this, colorChooser);
+		canvas = new Canvas(this, toolChooser);
 		add(colorChooser);
+		add(toolChooser);
 		add(canvas);
 
 		frame.addComponentListener(this);
@@ -89,6 +96,14 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 		return frame.getWidth();
 	}
 
+	public int getLeftWidth() {
+		return leftWidth;
+	}
+
+	public int getRightWidth() {
+		return rightWidth;
+	}
+
 	@Override
 	public Component add(Component component) {
 		super.add(component);
@@ -115,6 +130,14 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 		resized = false;
 	}
 
+	public void requestFocus(Updatable updatable) {
+		for (Updatable member : updatables) {
+			if (!member.equals(updatable)) {
+				member.defocus();
+			}
+		}
+	}
+
 	/* FULLSCREEN LISTENER */
 	@Override
 	public void windowEnteringFullScreen(FullScreenEvent e) {
@@ -124,7 +147,7 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 	@Override
 	public void windowEnteredFullScreen(FullScreenEvent e) {
 		// Exclusive Fullscreen
-		//GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0].setFullScreenWindow(this);
+		//GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0].setFullScreenWindow(frame);
 	}
 
 	@Override
@@ -187,6 +210,7 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 
 				try {
 					ImageIO.write(canvas.getImage(), extension, file);
+					frame.setTitle(file.getName());
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -214,6 +238,7 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 			file = fileChooser.getSelectedFile();
 			try {
 				canvas.setImage(ImageIO.read(file));
+				frame.setTitle(file.getName());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
