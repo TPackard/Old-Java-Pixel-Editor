@@ -210,7 +210,7 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 		public void mousePressed(MouseEvent e) {
 			mouseX = e.getX();
 			mouseY = e.getY();
-			toolChooser.getSelectedTool().clicked(mouseX, mouseY, imageG, scaledZoom);
+			toolChooser.getSelectedTool().clicked(mouseX, mouseY, imageG, image, scaledZoom);
 			parent.parent.requestFocus(parent);
 			repaint();
 		}

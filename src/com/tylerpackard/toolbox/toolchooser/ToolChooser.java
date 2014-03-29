@@ -14,6 +14,7 @@ public class ToolChooser extends JPanel implements Updatable {
 	private Window parent;
 	private final Pencil PENCIL;
 	private final Eraser ERASER;
+	private final ColorPicker PICKER;
 	private final int width;
 
 	public ToolChooser(Window parent, ColorChooser colorChooser) {
@@ -26,6 +27,8 @@ public class ToolChooser extends JPanel implements Updatable {
 		add(PENCIL);
 		ERASER = new Eraser(this, 8, 48);
 		add(ERASER);
+		PICKER = new ColorPicker(this, 8, 88, colorChooser);
+		add(PICKER);
 		selectedTool = PENCIL;
 		PENCIL.select();
 
@@ -63,6 +66,8 @@ public class ToolChooser extends JPanel implements Updatable {
 		g.drawImage(PENCIL.getIcon(), 8, 8, 32, 32, null);
 		g.drawImage(ERASER.getBG(), 8, 48, 32, 32, null);
 		g.drawImage(ERASER.getIcon(), 8, 48, 32, 32, null);
+		g.drawImage(PICKER.getBG(), 8, 88, 32, 32, null);
+		g.drawImage(PICKER.getIcon(), 8, 88, 32, 32, null);
 	}
 
 	public void mouseClicked(MouseEvent e) {

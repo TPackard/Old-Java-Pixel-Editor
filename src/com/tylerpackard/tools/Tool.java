@@ -19,6 +19,7 @@ public abstract class Tool extends JPanel implements MouseListener{
 	private String imagePath;
 	private boolean selected;
 	private boolean hover;
+	final Color noColor = new Color(0, true);
 
 
 	public Tool(ToolChooser parent, int x, int y) {
@@ -90,7 +91,7 @@ public abstract class Tool extends JPanel implements MouseListener{
 		hover = false;
 	}
 
-	public void clicked(int x, int y, Graphics g, int zoom) {
+	public void clicked(int x, int y, Graphics g, BufferedImage image, int zoom) {
 		g.fillRect(x / zoom, y / zoom, 1, 1);
 	}
 	public void dragged(MouseEvent e, int x, int y, Graphics g, int zoom) {

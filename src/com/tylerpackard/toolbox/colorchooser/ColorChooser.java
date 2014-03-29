@@ -91,6 +91,10 @@ public class ColorChooser extends JPanel implements Updatable{
 		}
 	}
 
+	public void setColor(Color color) {
+		setSliders(color, false);
+	}
+
 	public void setForeSelected(boolean foreSelected) {
 		this.foreSelected = foreSelected;
 		if (foreSelected) {
@@ -101,6 +105,10 @@ public class ColorChooser extends JPanel implements Updatable{
 	}
 
 	void setSliders(Color color) {
+		setSliders(color, true);
+	}
+
+	void setSliders(Color color, boolean setAlpha) {
 		if (typeSwitch.getState()) {
 			float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
 			slider1.setValue(hsb[0]);
@@ -111,7 +119,9 @@ public class ColorChooser extends JPanel implements Updatable{
 			slider2.setValue(color.getGreen() / 255.0);
 			slider3.setValue(color.getBlue() / 255.0);
 		}
-		sliderA.setValue(color.getAlpha() / 255.0);
+		if (setAlpha) {
+			sliderA.setValue(color.getAlpha() / 255.0);
+		}
 	}
 
 	void switchType() {

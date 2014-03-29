@@ -7,31 +7,29 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
-public class Pencil extends Tool{
+public class ColorPicker extends Tool {
 	private ColorChooser colorChooser;
 
 
-	public Pencil(ToolChooser parent, int x, int y, ColorChooser colorChooser) {
+	public ColorPicker(ToolChooser parent, int x, int y, ColorChooser colorChooser) {
 		super(parent, x, y);
 		this.colorChooser = colorChooser;
-		icon = loadImage("pencil.png");
+		icon = loadImage("picker.png");
 	}
 
 
 	@Override
 	public void clicked(int x, int y, Graphics g, BufferedImage image, int zoom) {
-		g.setColor(colorChooser.getColor());
-		super.clicked(x, y, g, image, zoom);
+		colorChooser.setColor(new Color(image.getRGB(x / zoom, y / zoom)));
 	}
 
 	@Override
 	public void dragged(MouseEvent e, int x, int y, Graphics g, int zoom) {
-		g.setColor(colorChooser.getColor());
-		super.dragged(e, x, y, g, zoom);
+		// Do nothing
 	}
 
 	@Override
 	public Color getColor() {
-		return colorChooser.getColor();
+		return noColor;
 	}
 }
