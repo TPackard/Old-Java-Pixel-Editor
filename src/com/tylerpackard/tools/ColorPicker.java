@@ -14,7 +14,7 @@ public class ColorPicker extends Tool {
 	public ColorPicker(ToolChooser parent, int x, int y, ColorChooser colorChooser) {
 		super(parent, x, y);
 		this.colorChooser = colorChooser;
-		icon = loadImage("picker.png");
+		icon = loadImage("picker");
 	}
 
 

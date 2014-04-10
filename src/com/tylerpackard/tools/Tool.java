@@ -1,6 +1,7 @@
 package com.tylerpackard.tools;
 
 import com.tylerpackard.toolbox.toolchooser.ToolChooser;
+import com.tylerpackard.ui.Window;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,7 +17,6 @@ public abstract class Tool extends JPanel implements MouseListener{
 	BufferedImage icon = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
 	final BufferedImage defaultBG;
 	final BufferedImage selectedBG;
-	private String imagePath;
 	private boolean selected;
 	private boolean hover;
 	final Color noColor = new Color(0, true);
@@ -24,19 +24,19 @@ public abstract class Tool extends JPanel implements MouseListener{
 
 	public Tool(ToolChooser parent, int x, int y) {
 		this.parent = parent;
-		imagePath = Pencil.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-		imagePath = imagePath.replace("%20", " ");
-		imagePath += "com/tylerpackard/tools/";
-		defaultBG = loadImage("defaultBG.png");
-		selectedBG = loadImage("selectedBG.png");
+		defaultBG = loadImage("defaultBG");
+		selectedBG = loadImage("selectedBG");
 		addMouseListener(this);
 		setBounds(x, y, 32, 32);
 	}
 
 
 	BufferedImage loadImage(String filePath) {
+		if (Window.hasRetina && getClass().getResourceAsStream("images/" + filePath + "@2x.png") != null) {
+			filePath += "@2x";
+		}
 		try {
-			return ImageIO.read(new File(imagePath + filePath));
+			return ImageIO.read(getClass().getResourceAsStream("images/" + filePath + ".png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			return new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);

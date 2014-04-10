@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 public class Eraser extends Tool{
 	public Eraser(ToolChooser parent, int x, int y) {
 		super(parent, x, y);
-		icon = loadImage("eraser.png");
+		icon = loadImage("eraser");
 	}
 
 

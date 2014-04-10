@@ -14,7 +14,7 @@ public class Pencil extends Tool{
 	public Pencil(ToolChooser parent, int x, int y, ColorChooser colorChooser) {
 		super(parent, x, y);
 		this.colorChooser = colorChooser;
-		icon = loadImage("pencil.png");
+		icon = loadImage("pencil");
 	}
 
 

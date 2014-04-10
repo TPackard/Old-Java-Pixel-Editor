@@ -4,6 +4,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 	private final ToolChooser toolChooser;
 	private int leftWidth = 192;
 	private int rightWidth = 48;
+	public static Boolean hasRetina = null;
 
 
 	public Window(int width, int height) {
@@ -135,6 +137,14 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 			if (!member.equals(updatable)) {
 				member.defocus();
 			}
+		}
+	}
+
+	@Override
+	public void paint(Graphics g) {
+		super.paint(g);
+		if (hasRetina == null) {
+			hasRetina = ((Graphics2D) g).getFontRenderContext().getTransform().equals(AffineTransform.getScaleInstance(2.0, 2.0));
 		}
 	}
 
@@ -257,6 +267,17 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			canvas.setZoom(zoomFactor);
+		}
+	}
+
+	private static class New extends AbstractAction {
+		public New() {
+
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+
 		}
 	}
 }
