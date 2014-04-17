@@ -6,39 +6,46 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class Switch extends JPanel implements MouseListener{
-	private final JLabel trueLabel;
-	private final JLabel falseLabel;
+	private final JLabel leftLabel;
+	private final JLabel rightLabel;
 	private boolean state = true;
 	private boolean flag = false;
+
+	private final Color trueFore = new Color(0xFFFFFF);
+	private final Color trueBack = new Color(0x0090FF);
+	private final Color falseFore = new Color(0xDDDDE1);
+	private final Color falseBack = new Color(0x303033);
 
 
 	public Switch(String trueText, String falseText, int x, int y, int width, int height, boolean state) {
 		super();
 		setLayout(null);
 		setBounds(x, y, width, height);
-		trueLabel = new JLabel(trueText, SwingConstants.CENTER);
-		falseLabel = new JLabel(falseText, SwingConstants.CENTER);
+		leftLabel = new JLabel(trueText, SwingConstants.CENTER);
+		rightLabel = new JLabel(falseText, SwingConstants.CENTER);
 		this.state = state;
 
 		if (state) {
-			trueLabel.setBackground(new Color(0x0090FF));
-			trueLabel.setForeground(new Color(0xFFFFFF));
-			falseLabel.setBackground(new Color(0xE0E0E4));
+			leftLabel.setBackground(trueBack);
+			leftLabel.setForeground(trueFore);
+			rightLabel.setBackground(falseBack);
+			rightLabel.setForeground(falseFore);
 		} else {
-			trueLabel.setBackground(new Color(0xE0E0E4));
-			falseLabel.setBackground(new Color(0x0090FF));
-			falseLabel.setForeground(new Color(0xFFFFFF));
+			leftLabel.setBackground(falseBack);
+			leftLabel.setForeground(falseFore);
+			rightLabel.setBackground(trueBack);
+			rightLabel.setForeground(trueFore);
 		}
 
-		trueLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));
-		trueLabel.setBounds(0, 0, width / 2, height);
-		trueLabel.setOpaque(true);
-		add(trueLabel);
+		leftLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));
+		leftLabel.setBounds(0, 0, width / 2, height);
+		leftLabel.setOpaque(true);
+		add(leftLabel);
 
-		falseLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));
-		falseLabel.setBounds(width / 2, 0, width / 2, height);
-		falseLabel.setOpaque(true);
-		add(falseLabel);
+		rightLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));
+		rightLabel.setBounds(width / 2, 0, width / 2, height);
+		rightLabel.setOpaque(true);
+		add(rightLabel);
 		addMouseListener(this);
 	}
 
@@ -63,16 +70,16 @@ public class Switch extends JPanel implements MouseListener{
 	public void mouseClicked(MouseEvent e) {
 		if (e.getX() > getWidth() / 2) {
 			state = false;
-			trueLabel.setBackground(new Color(0xE0E0E4));
-			trueLabel.setForeground(new Color(0x000000));
-			falseLabel.setBackground(new Color(0x0090FF));
-			falseLabel.setForeground(new Color(0xFFFFFF));
+			leftLabel.setBackground(falseBack);
+			leftLabel.setForeground(falseFore);
+			rightLabel.setBackground(trueBack);
+			rightLabel.setForeground(trueFore);
 		} else {
 			state = true;
-			trueLabel.setBackground(new Color(0x0090FF));
-			trueLabel.setForeground(new Color(0xFFFFFF));
-			falseLabel.setBackground(new Color(0xE0E0E4));
-			falseLabel.setForeground(new Color(0x000000));
+			leftLabel.setBackground(trueBack);
+			leftLabel.setForeground(trueFore);
+			rightLabel.setBackground(falseBack);
+			rightLabel.setForeground(falseFore);
 		}
 		flag = true;
 	}

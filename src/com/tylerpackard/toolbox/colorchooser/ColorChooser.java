@@ -27,7 +27,7 @@ public class ColorChooser extends JPanel implements Updatable{
 		setLocation(0, parent.height() - getHeight());
 		setVisible(true);
 		setOpaque(true);
-		setBackground(new Color(0xEEEEF2));
+		setBackground(new Color(0x444448));
 		setFocusable(false);
 		add(typeSwitch);
 		setForeSelected(true);

@@ -16,10 +16,11 @@ public class ToolChooser extends JPanel implements Updatable {
 	private final Eraser ERASER;
 	private final ColorPicker PICKER;
 	private final int width;
+	private boolean tempPicker = false;
 
 	public ToolChooser(Window parent, ColorChooser colorChooser) {
 		this.parent = parent;
-		setBackground(new Color(0xEEEEF2));
+		setBackground(new Color(0x444448));
 		setLayout(null);
 		width = parent.getRightWidth();
 
@@ -50,13 +51,22 @@ public class ToolChooser extends JPanel implements Updatable {
 
 	}
 
+	public Window getParent() {
+		return parent;
+	}
+
 	public Tool getSelectedTool() {
-		return selectedTool;
+		if (tempPicker) {
+			return PICKER;
+		} else {
+			return selectedTool;
+		}
 	}
 
 	public void requestSelection(Tool tool) {
 		selectedTool.deselect();
 		selectedTool = tool;
+		parent.repaint();
 	}
 
 	@Override
@@ -80,5 +90,10 @@ public class ToolChooser extends JPanel implements Updatable {
 				selectedTool = ERASER;
 			}
 		}
+	}
+
+	public void setTempPicker(boolean tempPicker) {
+		this.tempPicker = tempPicker;
+		parent.repaint();
 	}
 }

@@ -6,20 +6,20 @@ import com.tylerpackard.ui.Window;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 public abstract class Tool extends JPanel implements MouseListener{
-	private ToolChooser parent;
+	ToolChooser parent;
 	BufferedImage icon = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+	BufferedImage mouse;
 	final BufferedImage defaultBG;
 	final BufferedImage selectedBG;
 	private boolean selected;
 	private boolean hover;
-	final Color noColor = new Color(0, true);
 
 
 	public Tool(ToolChooser parent, int x, int y) {
@@ -32,12 +32,12 @@ public abstract class Tool extends JPanel implements MouseListener{
 
 
 	BufferedImage loadImage(String filePath) {
-		if (Window.hasRetina && getClass().getResourceAsStream("images/" + filePath + "@2x.png") != null) {
+		if (parent.getParent().hasRetina && getClass().getResourceAsStream("images/" + filePath + "@2x.png") != null) {
 			filePath += "@2x";
 		}
 		try {
 			return ImageIO.read(getClass().getResourceAsStream("images/" + filePath + ".png"));
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 		}
@@ -94,8 +94,25 @@ public abstract class Tool extends JPanel implements MouseListener{
 	public void clicked(int x, int y, Graphics g, BufferedImage image, int zoom) {
 		g.fillRect(x / zoom, y / zoom, 1, 1);
 	}
+
 	public void dragged(MouseEvent e, int x, int y, Graphics g, int zoom) {
 		g.drawLine(e.getX() / zoom,e.getY() / zoom, x / zoom, y / zoom);
 	}
-	public abstract Color getColor();
+
+	class Shortcut extends AbstractAction {
+		private final Tool parent;
+
+		public Shortcut(Tool parent) {
+			this.parent = parent;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			parent.parent.requestSelection(parent);
+		}
+	}
+
+	public void drawMouse(Graphics g, int x, int y) {
+		g.drawImage(mouse, x, y - 31, 32, 32, null);
+	}
 }

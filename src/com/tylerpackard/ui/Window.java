@@ -28,9 +28,15 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 	private final ToolChooser toolChooser;
 	private int leftWidth = 192;
 	private int rightWidth = 48;
-	public static Boolean hasRetina = null;
+	public Boolean hasRetina = null;
 
-
+	/**
+	* Creates a new Window object with the specified height and width,
+	* and creates and adds a new ColorChooser, ToolChooser, and Canvas to itself
+	*
+	* @param width	An integer that specifies the starting width of the window
+	* @param height	An integer that specifies the starting height of the window
+	*/
 	public Window(int width, int height) {
 		super();
 		setSize(width, height);
@@ -41,10 +47,9 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 		frame.setLayout(null);
 		setVisible(true);
 		frame.setVisible(true);
-		frame.getContentPane().setBackground(new Color(0xEEEEF2));
+		frame.getContentPane().setBackground(new Color(0x444448));
 		frame.add(this);
 		frame.setFocusable(true);
-		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		colorChooser = new ColorChooser(this);
 		toolChooser = new ToolChooser(this, colorChooser);

@@ -3,6 +3,7 @@ package com.tylerpackard.tools;
 import com.tylerpackard.canvas.Canvas;
 import com.tylerpackard.toolbox.toolchooser.ToolChooser;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -11,6 +12,9 @@ public class Eraser extends Tool{
 	public Eraser(ToolChooser parent, int x, int y) {
 		super(parent, x, y);
 		icon = loadImage("eraser");
+		mouse = loadImage("eraser mouse");
+		parent.getParent().getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("E"), "select-eraser");
+		parent.getParent().getActionMap().put("select-eraser", new Shortcut(this));
 	}
 
 
@@ -28,10 +32,5 @@ public class Eraser extends Tool{
 		g.setComposite(AlphaComposite.Clear);
 		super.dragged(e, x, y, g, zoom);
 		g.setComposite(AlphaComposite.SrcOver);
-	}
-
-	@Override
-	public Color getColor() {
-		return noColor;
 	}
 }

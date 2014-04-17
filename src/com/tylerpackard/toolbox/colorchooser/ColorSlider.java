@@ -31,6 +31,7 @@ class ColorSlider extends JPanel implements MouseListener, MouseMotionListener {
 	private BufferedImage bar;
 	private BufferedImage barBackground;
 	private Graphics barG;
+	private final Color lightColor = new Color(0xCCCCD0);
 
 
 	public ColorSlider(ColorChooser parent, int x, int y, String toolTip, final int limit) {
@@ -58,6 +59,7 @@ class ColorSlider extends JPanel implements MouseListener, MouseMotionListener {
 
 		label = new JLabel(toolTip.substring(0, 1));
 		label.setFont(new Font("SansSerif", Font.PLAIN, 10));
+		label.setForeground(lightColor);
 		label.setBounds(0, 0, barStart, 16);
 		add(label);
 
@@ -159,7 +161,7 @@ class ColorSlider extends JPanel implements MouseListener, MouseMotionListener {
 		g.drawImage(bar, barStart, 4, null);
 
 		/* SLIDER */
-		g.setColor(new Color(0x444448));
+		g.setColor(lightColor);
 		int point = (int)Math.round(value * scale) + barStart;
 		int offset = barWidth / 2;
 		int[] sliderXPoints = new int[]{point, point - offset, point + offset, point, point, point - offset + 1, point + offset - 1, point};

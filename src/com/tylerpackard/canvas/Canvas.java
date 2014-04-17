@@ -17,6 +17,7 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 	private int scrollY = 0;
 	private int imageWidth;
 	private int imageHeight;
+	private boolean mouseInBounds;
 
 
 	public Canvas(Window parent, ToolChooser toolChooser) {
@@ -24,7 +25,7 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 		this.toolChooser = toolChooser;
 		setLayout(null);
 		setBounds(parent.getLeftWidth(), 0, 1, 1);
-		setBackground(new Color(0xF6F6F9));
+		setBackground(new Color(0x55555A));
 		addMouseWheelListener(this);
 		setFocusable(true);
 		imageHolder = new ImageHolder(this);
@@ -115,7 +116,7 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 			this.parent = parent;
 			addMouseListener(this);
 			addMouseMotionListener(this);
-//			setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "blank cursor"));
+			setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "blank cursor"));
 		}
 
 
@@ -195,10 +196,21 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 
 			g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
 
-			g.setColor(toolChooser.getSelectedTool().getColor());
-			g.fillRect(hoverX - (hoverX % scaledZoom), hoverY - (hoverY % scaledZoom), scaledZoom, scaledZoom);
-			g.setColor(hoverBorder);
-			g.drawRect(hoverX - (hoverX % scaledZoom), hoverY - (hoverY % scaledZoom), scaledZoom, scaledZoom);
+			if (mouseInBounds) {
+				if (zoomFactor > 1) {
+					drawHover(g);
+				}
+				toolChooser.getSelectedTool().drawMouse(g, hoverX, hoverY);
+			}
+		}
+
+		void drawHover(Graphics g) {
+			Graphics2D g2d = (Graphics2D) g;
+			g2d.setColor(Color.WHITE);
+			g2d.drawRect(hoverX - (hoverX % scaledZoom), hoverY - (hoverY % scaledZoom), scaledZoom, scaledZoom);
+			g2d.setColor(Color.BLACK);
+			g2d.setStroke(new BasicStroke(1, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 1, new float[]{3, 5}, 0));
+			g2d.drawRect(hoverX - (hoverX % scaledZoom), hoverY - (hoverY % scaledZoom), scaledZoom, scaledZoom);
 		}
 
 		@Override
@@ -222,12 +234,14 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
-
+			mouseInBounds = true;
+			repaint();
 		}
 
 		@Override
 		public void mouseExited(MouseEvent e) {
-
+			mouseInBounds = false;
+			repaint();
 		}
 
 		@Override
