@@ -30,13 +30,8 @@ public class ColorPicker extends Tool {
 
 
 	@Override
-	public void clicked(int x, int y, Graphics g, BufferedImage image, int zoom) {
+	public void clicked(int x, int y, BufferedImage image, int zoom, boolean newEdit) {
 		colorChooser.setColor(new Color(image.getRGB(x / zoom, y / zoom)));
-	}
-
-	@Override
-	public void dragged(MouseEvent e, int x, int y, Graphics g, int zoom) {
-		// Do nothing
 	}
 
 	private class SetTempPicker extends AbstractAction {

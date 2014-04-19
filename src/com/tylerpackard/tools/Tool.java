@@ -1,7 +1,7 @@
 package com.tylerpackard.tools;
 
+import com.tylerpackard.edits.DrawEdit;
 import com.tylerpackard.toolbox.toolchooser.ToolChooser;
-import com.tylerpackard.ui.Window;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -10,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public abstract class Tool extends JPanel implements MouseListener{
 	ToolChooser parent;
@@ -91,12 +90,59 @@ public abstract class Tool extends JPanel implements MouseListener{
 		hover = false;
 	}
 
-	public void clicked(int x, int y, Graphics g, BufferedImage image, int zoom) {
-		g.fillRect(x / zoom, y / zoom, 1, 1);
-	}
+	public void clicked(int x, int y, BufferedImage image, int rgb, boolean newEdit) {}
+	public void dragged(MouseEvent e, int x2, int y2, BufferedImage image, int zoom) {}
 
-	public void dragged(MouseEvent e, int x, int y, Graphics g, int zoom) {
-		g.drawLine(e.getX() / zoom,e.getY() / zoom, x / zoom, y / zoom);
+	public void drawLine(MouseEvent e, int x2, int y2, BufferedImage image, int rgb, int zoom) {
+		DrawEdit edit = (DrawEdit) parent.getEditManager().peek();
+		int x = e.getX() / zoom;
+		int y= e.getY() / zoom;
+		x2 /= zoom;
+		y2 /= zoom;
+		int width = x2 - x;
+		int height = y2 - y;
+		int longest = Math.abs(width);
+		int shortest = Math.abs(height);
+		int dx1 = 0, dy1 = 0, dx2 = 0, dy2 = 0;
+
+		if (width < 0) {
+			dx1 = -1;
+			dx2 = -1;
+		} else if (width > 0) {
+			dx1 = 1;
+			dx2 = 1;
+		}
+
+		if (height < 0) {
+			dy1 = -1;
+		} else if (height > 0) {
+			dy1 = 1;
+		}
+
+		if (longest <= shortest) {
+			longest = Math.abs(height);
+			shortest = Math.abs(width);
+			if (height < 0) {
+				dy2 = -1;
+			} else if (height > 0) {
+				dy2 = 1;
+			}
+			dx2 = 0;
+		}
+
+		int numerator = longest >> 1;
+		for (int i = 0; i <= longest; i++) {
+			edit.addChange(x, y, image.getRGB(x, y), rgb);
+			numerator += shortest;
+			if (numerator >= longest) {
+				numerator -= longest;
+				x += dx1;
+				y += dy1;
+			} else {
+				x += dx2;
+				y += dy2;
+			}
+		}
 	}
 
 	class Shortcut extends AbstractAction {

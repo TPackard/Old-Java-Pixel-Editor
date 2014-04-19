@@ -1,5 +1,6 @@
 package com.tylerpackard.toolbox.toolchooser;
 
+import com.tylerpackard.edits.EditManager;
 import com.tylerpackard.toolbox.colorchooser.ColorChooser;
 import com.tylerpackard.tools.*;
 import com.tylerpackard.ui.Updatable;
@@ -17,6 +18,7 @@ public class ToolChooser extends JPanel implements Updatable {
 	private final ColorPicker PICKER;
 	private final int width;
 	private boolean tempPicker = false;
+
 
 	public ToolChooser(Window parent, ColorChooser colorChooser) {
 		this.parent = parent;
@@ -61,6 +63,10 @@ public class ToolChooser extends JPanel implements Updatable {
 		} else {
 			return selectedTool;
 		}
+	}
+
+	public EditManager getEditManager() {
+		return parent.getEditManager();
 	}
 
 	public void requestSelection(Tool tool) {

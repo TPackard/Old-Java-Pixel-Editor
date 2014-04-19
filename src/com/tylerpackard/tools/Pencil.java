@@ -1,5 +1,6 @@
 package com.tylerpackard.tools;
 
+import com.tylerpackard.edits.DrawEdit;
 import com.tylerpackard.toolbox.colorchooser.ColorChooser;
 import com.tylerpackard.toolbox.toolchooser.ToolChooser;
 
@@ -23,15 +24,20 @@ public class Pencil extends Tool{
 
 
 	@Override
-	public void clicked(int x, int y, Graphics g, BufferedImage image, int zoom) {
-		g.setColor(colorChooser.getColor());
-		super.clicked(x, y, g, image, zoom);
+	public void clicked(int x, int y, BufferedImage image, int zoom, boolean newEdit) {
+		DrawEdit edit;
+		if (newEdit) {
+			edit = new DrawEdit(this, image);
+		} else {
+			edit = (DrawEdit) parent.getEditManager().peek();
+		}
+		edit.addChange(x / zoom, y / zoom, image.getRGB(x / zoom, y / zoom), colorChooser.getColor().getRGB());
+		parent.getEditManager().push(edit);
 	}
 
 	@Override
-	public void dragged(MouseEvent e, int x, int y, Graphics g, int zoom) {
-		g.setColor(colorChooser.getColor());
-		super.dragged(e, x, y, g, zoom);
+	public void dragged(MouseEvent e, int x, int y, BufferedImage image, int zoom) {
+		drawLine(e, x, y, image, colorChooser.getColor().getRGB(), zoom);
 	}
 
 	@Override

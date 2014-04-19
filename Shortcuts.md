@@ -1,6 +1,11 @@
 Shortcuts
 =========
 
+### Tools
+- `Q` - Color picker
+- `W` - Pencil
+- `E` - Eraser
+
 ### File I/O
 - `Command-S` - Save file
 - `Command-O` - Open file
@@ -11,3 +16,8 @@ Shortcuts
 - `3` - 400% Zoom
 - `4` - 800% Zoom
 - `5` - 1600% Zoom
+
+### Undo/Redo
+- `Command-Z` - Undo change
+- `Command-Y` - Redo change
+- `Command-Shift-Z` - Redo change

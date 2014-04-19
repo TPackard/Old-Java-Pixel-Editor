@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import com.apple.eawt.AppEvent.FullScreenEvent;
 import com.apple.eawt.FullScreenListener;
 import com.tylerpackard.canvas.Canvas;
+import com.tylerpackard.edits.Edit;
+import com.tylerpackard.edits.EditManager;
 import com.tylerpackard.toolbox.colorchooser.ColorChooser;
 import com.tylerpackard.toolbox.toolchooser.ToolChooser;
 
@@ -26,6 +28,7 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 	private final Canvas canvas;
 	private final ColorChooser colorChooser;
 	private final ToolChooser toolChooser;
+	private final EditManager editManager;
 	private int leftWidth = 192;
 	private int rightWidth = 48;
 	public Boolean hasRetina = null;
@@ -53,6 +56,7 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 
 		colorChooser = new ColorChooser(this);
 		toolChooser = new ToolChooser(this, colorChooser);
+		editManager = new EditManager(this);
 		canvas = new Canvas(this, toolChooser);
 		add(colorChooser);
 		add(toolChooser);
@@ -65,10 +69,16 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 
 		/*KEYBINDINGS*/
 		// Open and Save
-		getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.META_DOWN_MASK), "save");
+		getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("meta pressed S"), "save");
 		getActionMap().put("save", new Save(this));
-		getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.META_DOWN_MASK), "open");
+		getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("meta pressed O"), "open");
 		getActionMap().put("open", new Open(this));
+		// Undo / Redo
+		getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("meta pressed Z"), "undo");
+		getActionMap().put("undo", new Undo(editManager));
+		getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("meta pressed Y"), "redo");
+		getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("meta shift pressed Z"), "redo");
+		getActionMap().put("redo", new Redo(editManager));
 		// Zoom
 		for (int i = 1; i <= 5; i++) {
 			String num = Integer.toString(i);
@@ -84,6 +94,10 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 
 	public JFileChooser getFileChooser() {
 		return fileChooser;
+	}
+
+	public EditManager getEditManager() {
+		return editManager;
 	}
 
 	public void toggleFullscreen(boolean state) {
@@ -127,6 +141,10 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 		if (resized) {
 			reposition();
 		}
+	}
+
+	public void repaint() {
+		super.repaint();
 	}
 
 	public void reposition() {
@@ -257,6 +275,32 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+
+	private static class Undo extends AbstractAction {
+		private EditManager editManager;
+
+		public Undo(EditManager editManager) {
+			this.editManager = editManager;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			editManager.undo();
+		}
+	}
+
+	private static class Redo extends AbstractAction {
+		private EditManager editManager;
+
+		public Redo(EditManager editManager) {
+			this.editManager = editManager;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			editManager.redo();
 		}
 	}
 

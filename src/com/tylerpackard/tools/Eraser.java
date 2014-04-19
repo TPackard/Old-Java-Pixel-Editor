@@ -1,14 +1,16 @@
 package com.tylerpackard.tools;
 
-import com.tylerpackard.canvas.Canvas;
+import com.tylerpackard.edits.DrawEdit;
 import com.tylerpackard.toolbox.toolchooser.ToolChooser;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 public class Eraser extends Tool{
+	private final int fullAlpha = 0x1010101;
+
+
 	public Eraser(ToolChooser parent, int x, int y) {
 		super(parent, x, y);
 		icon = loadImage("eraser");
@@ -19,18 +21,14 @@ public class Eraser extends Tool{
 
 
 	@Override
-	public void clicked(int x, int y, Graphics graphics, BufferedImage image, int zoom) {
-		Graphics2D g = (Graphics2D) graphics;
-		g.setComposite(AlphaComposite.Clear);
-		super.clicked(x, y, g, image, zoom);
-		g.setComposite(AlphaComposite.SrcOver);
+	public void clicked(int x, int y, BufferedImage image, int zoom, boolean newEdit) {
+		DrawEdit edit = new DrawEdit(this, image);
+		edit.addChange(x / zoom, y / zoom, image.getRGB(x / zoom, y / zoom), fullAlpha);
+		parent.getEditManager().push(edit);
 	}
 
 	@Override
-	public void dragged(MouseEvent e, int x, int y, Graphics graphics, int zoom) {
-		Graphics2D g = (Graphics2D) graphics;
-		g.setComposite(AlphaComposite.Clear);
-		super.dragged(e, x, y, g, zoom);
-		g.setComposite(AlphaComposite.SrcOver);
+	public void dragged(MouseEvent e, int x, int y, BufferedImage image, int zoom) {
+		drawLine(e, x, y, image, fullAlpha, zoom);
 	}
 }

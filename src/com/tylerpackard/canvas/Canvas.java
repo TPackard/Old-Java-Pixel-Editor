@@ -110,6 +110,7 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 		private final Color hoverBorder = new Color(0x88888888, true);
 		private int xPos;
 		private int yPos;
+		private boolean newEdit = true;
 
 
 		public ImageHolder(Canvas parent) {
@@ -222,14 +223,15 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 		public void mousePressed(MouseEvent e) {
 			mouseX = e.getX();
 			mouseY = e.getY();
-			toolChooser.getSelectedTool().clicked(mouseX, mouseY, imageG, image, scaledZoom);
+			toolChooser.getSelectedTool().clicked(mouseX, mouseY, image, scaledZoom, newEdit);
 			parent.parent.requestFocus(parent);
 			repaint();
+			newEdit = false;
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-
+			newEdit = true;
 		}
 
 		@Override
@@ -246,7 +248,7 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
-			toolChooser.getSelectedTool().dragged(e, mouseX, mouseY, imageG, scaledZoom);
+			toolChooser.getSelectedTool().dragged(e, mouseX, mouseY, image, scaledZoom);
 			mouseX = e.getX();
 			mouseY = e.getY();
 			hoverX = e.getX();
