@@ -5,10 +5,12 @@ Shortcuts
 - `Q` - Color picker
 - `W` - Pencil
 - `E` - Eraser
+- `Press Command` - Temporary selects color picker
 
-### File I/O
+### File Related
 - `Command-S` - Save file
 - `Command-O` - Open file
+- `Command-N` - New file
 
 ### Zoom
 - `1` - 100% Zoom

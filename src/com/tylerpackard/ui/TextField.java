@@ -5,11 +5,16 @@ import javax.swing.text.*;
 import java.awt.*;
 
 public class TextField extends JTextField {
-	public static final int NUMS_ONLY = 0;
+	public static final int NO_FILTER = 0;
+	public static final int NUMS_ONLY = 1;
 
 
 	public TextField(String text) {
-		super(text);
+		this(text, NO_FILTER);
+	}
+
+	public TextField(int filter) {
+		this("", filter);
 	}
 
 	public TextField(String text, int filter) {
