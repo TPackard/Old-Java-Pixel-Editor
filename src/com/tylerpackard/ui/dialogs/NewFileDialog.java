@@ -13,6 +13,8 @@ import java.awt.image.BufferedImage;
  * After creation, the image on the canvas is replaced by a blank one with the specified dimensions.
  *
  * @author Tyler Packard
+ * @version 1
+ * @since 0.0.1
  * @see JDialog
  */
 
@@ -38,8 +40,8 @@ public class NewFileDialog extends JDialog {
 
 	/**
 	 * Creates the dialog, but does not show it. Adds all of the labels, textfields, and buttons to itself
-	 * and specifies their locations. Also adds an <code>ActionListener</code> to the textfields, buttons,
-	 * and itself. The <code>createAction</code> action listener hides the dialog and sets the image of
+	 * and specifies their locations. Also adds an ActionListener to the textfields, buttons,
+	 * and itself. The createAction action listener hides the dialog and sets the image of
 	 * the canvas to a new blank image with the specified dimensions.
 	 *
 	 * @param parent The parent of the dialog on which it should be centered
@@ -83,7 +85,7 @@ public class NewFileDialog extends JDialog {
 
 
 	/**
-	 * Shows the dialog and centers it over the parent <code>Window</code>. It also sets the canvas that will
+	 * Shows the dialog and centers it over the parent Window. It also sets the canvas that will
 	 * receive the new image.
 	 *
 	 * @param canvas The canvas which will receive the new image

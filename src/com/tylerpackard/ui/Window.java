@@ -26,7 +26,10 @@ import static com.apple.eawt.FullScreenUtilities.*;
  * Window.
  *
  * @author Tyler Packard
- *
+ * @version 1
+ * @since 0.0.1
+ * @see JComponent
+ * @see JFrame
  */
 public class Window extends JComponent implements FullScreenListener, ComponentListener {
 
@@ -43,7 +46,7 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 
 	/**
 	 * Whether or not the window has been resized and not yet repositioned
-	 * @see #reposition
+	 * @see #reposition()
 	 */
 	private boolean resized = true;
 
@@ -82,7 +85,7 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 	public Boolean hasRetina = null;
 
 	/**
-	* Creates a new <code>Window</code> object with the specified height and width and puts it in its own
+	* Creates a new Window object with the specified height and width and puts it in its own
 	* <code>JFrame</code>. It creates and adds a new <code>ColorChooser</code>, <code>ToolChooser</code>, and
 	* <code>Canvas</code> to itself and also creates its own <code>EditManager</code> and <code>NewFileDialog</code>.
 	* It adds a component and fullscreen listener and enables the capability to go fullscreen on Macs. It also
@@ -124,7 +127,7 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 		getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("meta pressed O"), "open");
 		getActionMap().put("open", new Open(this));
 		getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("meta pressed N"), "newImage");
-		getActionMap().put("newImage", new NewImage(this));
+		getActionMap().put("newImage", new NewImage(newFileDialog, canvas));
 
 		getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("meta pressed Z"), "undo");
 		getActionMap().put("undo", new Undo(editManager));
@@ -140,39 +143,93 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 	}
 
 
-	public void toggleFullscreen() {
-		toggleFullscreen(!fullscreen);
-	}
-
+	/**
+	 * Returns the window's JFileChooser
+	 *
+	 * @see JFileChooser
+	 * @return The window's JFileChooser
+	 */
 	public JFileChooser getFileChooser() {
 		return fileChooser;
 	}
 
+	/**
+	 * Returns the window's EditManager
+	 *
+	 * @see EditManager
+	 * @return The window's EditManager
+	 */
 	public EditManager getEditManager() {
 		return editManager;
 	}
 
+	/**
+	 * Returns the JFrame containing the Window
+	 *
+	 * @return The JFrame containing the Window
+	 * @see JFrame
+	 */
 	public JFrame getFrame() {
 		return frame;
 	}
 
+	/**
+	 * Fullscreens the app if not currently fullscreened, or escapes fullscreen if it currently is fullscreened
+	 *
+	 * @see #toggleFullscreen(boolean)
+	 */
+	public void toggleFullscreen() {
+		toggleFullscreen(!fullscreen);
+	}
+
+	/**
+	 * Sets whether or not the app is fullscreen based on the given state.
+	 *
+	 * @param state True if it should be fullscreen, false if it shouldn't
+	 * @see com.apple.eawt.Application#requestToggleFullScreen(java.awt.Window)
+	 */
 	public void toggleFullscreen(boolean state) {
 		fullscreen = state;
 		com.apple.eawt.Application.getApplication().requestToggleFullScreen(frame);
 	}
 
+	/**
+	 * Sets whether or not the frame is resizable
+	 *
+	 * @param resizable Whether or not the frame is resizable
+	 * @see JFrame#setResizable(boolean)
+	 */
 	public void setResizable(boolean resizable) {
 		frame.setResizable(resizable);
 	}
 
+	/**
+	 * Sets the size of the frame only
+	 *
+	 * @param width The width of the frame
+	 * @param height The height of the frame
+	 * @see JFrame#setSize(int, int)
+	 */
 	public void setFrameSize(int width, int height) {
 		frame.setSize(width, height);
 	}
 
+	/**
+	 * Returns the height of the JFrame
+	 *
+	 * @return The height of the JFrame
+	 * @see JFrame#getHeight()
+	 */
 	public int frameHeight() {
 		return frame.getHeight();
 	}
 
+	/**
+	 * Returns the height of the Window, and subtracts the height of the containing JFrame's menubar
+	 *
+	 * @return The height of the Window
+	 * @see JFrame#getHeight()
+	 */
 	public int height() {
 		int offset = 0;
 		if (!fullscreen) {
@@ -181,18 +238,42 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 		return frame.getHeight() - offset;
 	}
 
+	/**
+	 * Returns the width of the Window
+	 *
+	 * @return The width of the window
+	 * @see JFrame#getWidth()
+	 */
 	public int width() {
 		return frame.getWidth();
 	}
 
+	/**
+	 * Returns the width of the left toolbar section for use by child toolbars
+	 *
+	 * @return Left toolbar width
+	 */
 	public int getLeftWidth() {
 		return leftWidth;
 	}
 
+	/**
+	 * Returns the width of the right toolbar section for use by child toolbars
+	 *
+	 * @return Right toolbar width
+	 */
 	public int getRightWidth() {
 		return rightWidth;
 	}
 
+	/**
+	 * Adds the given component to the Window's JComponent. If the given component is and Updatable, then it's added
+	 * to the ArrayList of Updatables
+	 *
+	 * @param component The component to be added to the Window
+	 * @return The Component added to the Window
+	 * @see Container#add(Component)
+	 */
 	@Override
 	public Component add(Component component) {
 		super.add(component);
@@ -202,6 +283,12 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 		return component;
 	}
 
+	/**
+	 * Updates all child updatables and if the Window has been resized, then it's repositioned()
+	 *
+	 * @see Updatable
+	 * @see #reposition()
+	 */
 	public void update() {
 		for (Updatable updatable : updatables) {
 			updatable.update();
@@ -211,10 +298,9 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 		}
 	}
 
-	public void repaint() {
-		super.repaint();
-	}
-
+	/**
+	 * Resizes the JComponent and all child Updatables
+	 */
 	public void reposition() {
 		setSize(width(), height());
 		for (Updatable updatable : updatables) {
@@ -223,6 +309,12 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 		resized = false;
 	}
 
+	/**
+	 * It gives the given Updatable focus. It does this by removing focus from all Updatables except for the given one.
+	 *
+	 * @param updatable The Updatable to give focus to
+	 * @see Updatable#defocus()
+	 */
 	public void requestFocus(Updatable updatable) {
 		for (Updatable member : updatables) {
 			if (!member.equals(updatable)) {
@@ -231,6 +323,12 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 		}
 	}
 
+	/**
+	 * Paints the Window and detects if the computer's display has retina capability if it hasn't already been detected
+	 *
+	 * @param g The Graphics that are used to paint
+	 * @see JComponent#paint(Graphics)
+	 */
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
@@ -239,52 +337,103 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 		}
 	}
 
-	/* FULLSCREEN LISTENER */
+
+	/** Fullscreen Listener **/
+
+	/**
+	 * Notifies the Window when the program begins to enter fullscreen
+	 *
+	 * @param e The fullscreen event
+	 * @see FullScreenListener
+	 */
 	@Override
 	public void windowEnteringFullScreen(FullScreenEvent e) {
 		fullscreen = true;
 	}
 
+	/**
+	 * Occurs when the Window has finished entering fullscreen
+	 *
+	 * @param e The fullscreen event
+	 */
 	@Override
 	public void windowEnteredFullScreen(FullScreenEvent e) {
 		// Exclusive Fullscreen
 		//GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0].setFullScreenWindow(frame);
 	}
 
+	/**
+	 * Notifies the Window when it begins to exit fullscreen
+	 *
+	 * @param e The fullscreen event
+	 */
 	@Override
 	public void windowExitingFullScreen(FullScreenEvent e) {
 		//GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0].setFullScreenWindow(null);
 		fullscreen = false;
 	}
 
+	/**
+	 * Occurs when the Window has finished exiting fullscreen
+	 *
+	 * @param e The fullscreen event
+	 */
 	@Override
 	public void windowExitedFullScreen(FullScreenEvent e) {
 
 	}
 
-	/* COMPONENT LISTENER */
+
+	/** Component Listener **/
+
+	/**
+	 * Notifies the program when the JFrame is resized
+	 *
+	 * @param e The component event
+	 */
 	@Override
 	public void componentResized(ComponentEvent e) {
 		resized = true;
 	}
 
+	/**
+	 * Occurs when the JFrame is moved
+	 *
+	 * @param e The component event
+	 */
 	@Override
 	public void componentMoved(ComponentEvent e) {
 
 	}
 
+	/**
+	 * Occurs when the JFrame is shown
+	 *
+	 * @param e The component event
+	 */
 	@Override
 	public void componentShown(ComponentEvent e) {
 
 	}
 
+	/**
+	 * Occurs when the JFrame is hidden
+	 *
+	 * @param e The component event
+	 */
 	@Override
 	public void componentHidden(ComponentEvent e) {
 
 	}
 
 
-	/* KEYBINDINGS */
+	/** Keybindings **/
+
+	/**
+	 * An action that calls the parent Window's save method when the user uses the save shortcut.
+	 *
+	 * @see #save()
+	 */
 	private static class Save extends AbstractAction {
 		private Window parent;
 
@@ -298,6 +447,14 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 		}
 	}
 
+	/**
+	 * Called by the save action. It displays a JFileChooser that lets the user
+	 * specify a location to save the image. Then it creates a new File containing the child Canvas' image and saves it to
+	 * the location specified by the user, if it's valid.
+	 *
+	 * @see JFileChooser
+	 * @see ImageIO#write(java.awt.image.RenderedImage, String, File)
+	 */
 	void save() {
 		File file = null;
 		int option = fileChooser.showSaveDialog(this);
@@ -319,6 +476,11 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 		}
 	}
 
+	/**
+	 * An action that calls the parent Window's open method when the user uses the open shortcut.
+	 *
+	 * @see #open()
+	 */
 	private static class Open extends AbstractAction {
 		private Window parent;
 
@@ -332,6 +494,13 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 		}
 	}
 
+	/**
+	 * Called by the open action. It displays a JFileChooser that lets the user
+	 * specify an image to open. Then it opens the image if it's valid and sends it to the Window's child Canvas.
+	 *
+	 * @see JFileChooser
+	 * @see ImageIO#read(File)
+	 */
 	void open() {
 		File file = null;
 		int option = fileChooser.showOpenDialog(this);
@@ -346,6 +515,11 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 		}
 	}
 
+	/**
+	 * An action that calls the parent Window's EditManager's undo method when the user uses the undo shortcut.
+	 *
+	 * @see EditManager#undo()
+	 */
 	private static class Undo extends AbstractAction {
 		private EditManager editManager;
 
@@ -359,6 +533,11 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 		}
 	}
 
+	/**
+	 * An action that calls the parent Window's EditManager's redo method when the user uses the redo shortcut.
+	 *
+	 * @see EditManager#redo()
+	 */
 	private static class Redo extends AbstractAction {
 		private EditManager editManager;
 
@@ -372,6 +551,11 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 		}
 	}
 
+	/**
+	 * An action that zooms in the Canvas by the specified amount when the user uses a zoom shortcut.
+	 *
+	 * @see Canvas#setZoom(int)
+	 */
 	private static class Zoom extends AbstractAction {
 		private Canvas canvas;
 		private int zoomFactor;
@@ -387,20 +571,23 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 		}
 	}
 
+	/**
+	 * An action that shows a NewDialog when the user uses the new shortcut.
+	 *
+	 * @see NewFileDialog#showDialog(Canvas)
+	 */
 	private static class NewImage extends AbstractAction {
-		private Window parent;
+		private NewFileDialog parent;
+		private Canvas canvas;
 
-		public NewImage(Window parent) {
+		public NewImage(NewFileDialog parent, Canvas canvas) {
 			this.parent = parent;
+			this.canvas = canvas;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			parent.newImage();
+			parent.showDialog(canvas);
 		}
-	}
-
-	void newImage() {
-		newFileDialog.showDialog(canvas);
 	}
 }
