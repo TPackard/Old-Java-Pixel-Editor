@@ -8,19 +8,15 @@ import java.awt.event.MouseListener;
 class ColorPreview extends JPanel implements MouseListener{
 	private final ColorChooser parent;
 
+
 	public ColorPreview(ColorChooser parent, int y) {
 		super();
 		this.parent = parent;
-		parent.add(this);
 		setBounds(46, y, 100, 64);
 		addMouseListener(this);
 		setCursor(new Cursor(Cursor.HAND_CURSOR));
 	}
 
-
-	public void update() {
-
-	}
 
 	@Override
 	public void paint(Graphics graphics) {

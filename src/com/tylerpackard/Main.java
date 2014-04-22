@@ -2,10 +2,6 @@ package com.tylerpackard;
 
 import com.tylerpackard.ui.Window;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-
 public class Main implements Runnable{
 	private Window window;
 

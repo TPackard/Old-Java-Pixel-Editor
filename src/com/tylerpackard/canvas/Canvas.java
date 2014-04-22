@@ -107,7 +107,6 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 		private int mouseY;
 		private int hoverX;
 		private int hoverY;
-		private final Color hoverBorder = new Color(0x88888888, true);
 		private int xPos;
 		private int yPos;
 		private boolean newEdit = true;

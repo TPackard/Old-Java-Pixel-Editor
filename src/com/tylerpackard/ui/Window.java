@@ -144,16 +144,6 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 
 
 	/**
-	 * Returns the window's JFileChooser
-	 *
-	 * @see JFileChooser
-	 * @return The window's JFileChooser
-	 */
-	public JFileChooser getFileChooser() {
-		return fileChooser;
-	}
-
-	/**
 	 * Returns the window's EditManager
 	 *
 	 * @see EditManager
@@ -316,11 +306,7 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 	 * @see Updatable#defocus()
 	 */
 	public void requestFocus(Updatable updatable) {
-		for (Updatable member : updatables) {
-			if (!member.equals(updatable)) {
-				member.defocus();
-			}
-		}
+		updatables.stream().filter(member -> !member.equals(updatable)).forEach(Updatable::defocus);
 	}
 
 	/**
@@ -456,12 +442,12 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 	 * @see ImageIO#write(java.awt.image.RenderedImage, String, File)
 	 */
 	void save() {
-		File file = null;
+		File file;
 		int option = fileChooser.showSaveDialog(this);
 		if (option == JFileChooser.APPROVE_OPTION) {
 			file = fileChooser.getSelectedFile();
 
-			String extension = "";
+			String extension;
 			int i = file.getName().lastIndexOf('.');
 			if (i > 0) {
 				extension = file.getName().substring(i + 1);
@@ -502,7 +488,7 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 	 * @see ImageIO#read(File)
 	 */
 	void open() {
-		File file = null;
+		File file;
 		int option = fileChooser.showOpenDialog(this);
 		if (option == JFileChooser.APPROVE_OPTION) {
 			file = fileChooser.getSelectedFile();

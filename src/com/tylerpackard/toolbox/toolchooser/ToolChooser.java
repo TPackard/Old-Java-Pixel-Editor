@@ -8,7 +8,6 @@ import com.tylerpackard.ui.Window;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
 
 public class ToolChooser extends JPanel implements Updatable {
 	private Tool selectedTool;
@@ -84,18 +83,6 @@ public class ToolChooser extends JPanel implements Updatable {
 		g.drawImage(ERASER.getIcon(), 8, 48, 32, 32, null);
 		g.drawImage(PICKER.getBG(), 8, 88, 32, 32, null);
 		g.drawImage(PICKER.getIcon(), 8, 88, 32, 32, null);
-	}
-
-	public void mouseClicked(MouseEvent e) {
-		int x = e.getX();
-		int y = e.getY();
-		if (x >= 8 && x <= 40) {
-			if (y >= 8 && y <= 40) {
-				selectedTool = PENCIL;
-			} else if (y >= 48 && y <= 80) {
-				selectedTool = ERASER;
-			}
-		}
 	}
 
 	public void setTempPicker(boolean tempPicker) {

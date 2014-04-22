@@ -14,7 +14,6 @@ public class ColorChooser extends JPanel implements Updatable{
 	private final ColorSlider slider2 = new ColorSlider(this, 10, 72, "Saturation", 100);
 	private final ColorSlider slider3 = new ColorSlider(this, 10, 96, "Brightness", 100);
 	private final ColorSlider sliderA = new ColorSlider(this, 10, 120, "Alpha", 100);
-	private final ColorPreview preview = new ColorPreview(this, 152);
 	private Color foreground = new Color(0x000000);
 	private Color background = new Color(0xFFFFFF);
 	boolean foreSelected = true;
@@ -30,6 +29,7 @@ public class ColorChooser extends JPanel implements Updatable{
 		setBackground(new Color(0x444448));
 		setFocusable(false);
 		add(typeSwitch);
+		add(new ColorPreview(this, 152));
 		setForeSelected(true);
 		setLayout(null);
 	}
