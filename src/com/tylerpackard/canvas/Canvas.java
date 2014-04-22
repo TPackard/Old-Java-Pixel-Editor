@@ -9,17 +9,70 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
+/**
+ * The Canvas holds the image that's being edited, although the image is stored in a child ImageHolder. The Canvas
+ * allows the ImageHolder to be scrolled in any direction if it is larger than the Canvas.
+ *
+ * @see ImageHolder
+ */
 public class Canvas extends JPanel implements Updatable, MouseWheelListener {
+
+	/**
+	 * The ImageHolder contained by the Canvas. The Canvas can get and set the image contained by the ImageHolder and
+	 * can scroll it.
+	 */
 	private final ImageHolder imageHolder;
+
+	/**
+	 * The Window which contains the Canvas.
+	 */
 	private final Window parent;
+
+	/**
+	 * The ToolChooser which contains the tools to use on the Canvas.
+	 */
 	private ToolChooser toolChooser;
+
+	/**
+	 * How much the child ImageHolder has been scrolled horizontally.
+	 *
+	 * @see ImageHolder
+	 */
 	private int scrollX = 0;
+
+	/**
+	 * How much the child ImageHolder has been scrolled vertically.
+	 *
+	 * @see ImageHolder
+	 */
 	private int scrollY = 0;
+
+	/**
+	 * The width of the image scaled by the scaled zoom factor
+	 *
+	 * @see ImageHolder#scaledZoom
+	 */
 	private int imageWidth;
+
+	/**
+	 * The height of the image scaled by the scaled zoom factor
+	 *
+	 * @see ImageHolder#scaledZoom
+	 */
 	private int imageHeight;
+
+	/**
+	 * Stores whether or not the mouse is inside the ImageHolder
+	 */
 	private boolean mouseInBounds;
 
 
+	/**
+	 * Sets the parent Window and ToolChooser to get tools from, and sets itself up.
+	 *
+	 * @param parent The Window containing it
+	 * @param toolChooser The ToolChooser to get tools from
+	 */
 	public Canvas(Window parent, ToolChooser toolChooser) {
 		this.parent = parent;
 		this.toolChooser = toolChooser;
@@ -33,39 +86,76 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 		setImagePos();
 	}
 
-
+	/**
+	 * Unused method
+	 */
 	@Override
-	public void update() {
+	public void update() {}
 
-	}
-
+	/**
+	 * Unused method
+	 */
 	@Override
 	public void defocus() {
 
 	}
 
+	/**
+	 * Returns the image being edited
+	 *
+	 * @return The image being edited
+	 */
 	public BufferedImage getImage() {
 		return imageHolder.getImage();
 	}
 
+	/**
+	 * Sets the image being edited
+	 *
+	 * @param image The new image to be edited
+	 */
 	public void setImage(BufferedImage image) {
 		imageHolder.setImage(image);
 	}
 
+	/**
+	 * Sets the zoom level of the image holder
+	 *
+	 * @param zoomFactor How much to be zoomed in
+	 * @see ImageHolder#setZoom(int)
+	 */
 	public void setZoom(int zoomFactor) {
 		imageHolder.setZoom(zoomFactor);
 	}
 
+	/**
+	 * Repositions the Canvas inside the parent Window when the parent Window is resized. The Canvas spans between the
+	 * left and right toolbars, and occupies the entire height of the Window.
+	 *
+	 * @see Window#reposition()
+	 */
 	@Override
 	public void reposition() {
 		setSize(parent.width() - parent.getLeftWidth() - parent.getRightWidth(), parent.height());
 		imageHolder.setZoom();
 	}
 
+	/**
+	 * Sets the position of the image holder based on how much the user has scrolled
+	 *
+	 * @see #mouseWheelMoved(MouseWheelEvent)
+	 */
 	public void setImagePos() {
 		imageHolder.setPos();
 	}
 
+	/**
+	 * Occurs when the user scrolls inside the Canvas. It repositions the image holder is it hasn't been scrolled out
+	 * of bounds and is larger than the canvas in the axis being scrolled.
+	 *
+	 * @param e The scrolling event
+	 * @see MouseWheelEvent
+	 */
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		int amount = (int)Math.round(e.getPreciseWheelRotation() * 2);
@@ -93,25 +183,89 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 			}
 		}
 	}
-	///////////////////////////////////////////////////////////////////////////////////////////////////////
-	//   IMAGEHOLDER   ////////////////////////////////////////////////////////////////////////////////////
-	///////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+	  //////////////////
+	 // Image Holder //
+	//////////////////
+
+	/**
+	 * The section that holds the image and allows it to be edited. It can be scrolled around and zoomed in by the
+	 * Canvas, and communicates with it to change the image being edited.
+	 *
+	 * @author Tyler Packard
+	 * @version 1
+	 * @since 0.0.1
+	 * @see Canvas
+	 */
 	private class ImageHolder extends JComponent implements MouseListener, MouseMotionListener, Updatable {
+
+		/**
+		 * The Canvas that contains this instance of an ImageHolder
+		 */
 		private final Canvas parent;
+
+		/**
+		 * The image that is being held and edited
+		 */
 		private BufferedImage image = new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
+
+		/**
+		 * The Graphics object of the image being held
+		 */
 		private Graphics imageG = image.getGraphics();
-		private int zoomFactor = 1; // The zoom factor
-		private int scaledZoom = 1; // The zoom factor scaled exponentially
+
+		/**
+		 * The amount to be zoomed in, unscaled
+		 */
+		private int zoomFactor = 1;
+
+		/**
+		 * The amount to zoom in, scaled exponentially
+		 */
+		private int scaledZoom = 1;
+
+		/**
+		 * The previous X position of the mouse while pressed
+		 */
 		private int mouseX;
+
+		/**
+		 * The previous Y position of the mouse while pressed
+		 */
 		private int mouseY;
+
+		/**
+		 * The previous X position of the mouse
+		 */
 		private int hoverX;
+
+		/**
+		 * The previous Y position of the mouse
+		 */
 		private int hoverY;
+
+		/**
+		 * The X position of the ImageHolder in the Canvas
+		 */
 		private int xPos;
+
+		/**
+		 * The Y position of the ImageHolder in the Canvas
+		 */
 		private int yPos;
+
+		/**
+		 * Whether or not to make a new edit or append the last one
+		 */
 		private boolean newEdit = true;
 
 
+		/**
+		 * Adds mouse listeners and makes the cursor invisible when it's inside itself.
+		 *
+		 * @param parent The Canvas containing the ImageHolder
+		 */
 		public ImageHolder(Canvas parent) {
 			this.parent = parent;
 			addMouseListener(this);
@@ -120,6 +274,12 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 		}
 
 
+		/**
+		 * Sets the image being held to the given one and disposes the old Graphics and replaces them with the new
+		 * image's Graphics. It also resets the zoom level to one.
+		 *
+		 * @param image The new image to be held
+		 */
 		public void setImage(BufferedImage image) {
 			imageG.dispose();
 			this.image = image;
@@ -127,12 +287,13 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 			setZoom(1);
 		}
 
+		/**
+		 * Returns the image being held
+		 *
+		 * @return The image being held
+		 */
 		public BufferedImage getImage() {
 			return image;
-		}
-
-		public void setZoom() {
-			setZoom(zoomFactor);
 		}
 
 		public int getXPos() {
@@ -143,6 +304,19 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 			return yPos;
 		}
 
+		/**
+		 * Sets the zoom level to the current one, forcing the ImageHolder to make sure the image is in a legal
+		 * position and to reposition itself.
+		 */
+		public void setZoom() {
+			setZoom(zoomFactor);
+		}
+
+		/**
+		 * Zooms in or out as specified and repositions the image and itself.
+		 *
+		 * @param zoomFactor How much to be zoomed in
+		 */
 		public void setZoom(int zoomFactor) {
 			this.zoomFactor = zoomFactor;
 			scaledZoom = (int)Math.pow(2, zoomFactor - 1);
@@ -165,6 +339,9 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 			setPos();
 		}
 
+		/**
+		 * Repositions itself and repaints.
+		 */
 		public void setPos() {
 			xPos = parent.getWidth() / 2 - imageWidth / 2 + scrollX;
 			yPos = parent.getHeight() / 2 - imageHeight / 2 + scrollY;
@@ -172,11 +349,19 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 			repaint();
 		}
 
+		/**
+		 * Repaints the parent Canvas in addition to repainting itself.
+		 */
 		@Override
 		public void repaint() {
 			parent.repaint();
 		}
 
+		/**
+		 * Draws the image, the background, and the mouse icon if in bounds.
+		 *
+		 * @param g The Graphics object to paint with
+		 */
 		@Override
 		public void paint(Graphics g) {
 			super.paint(g);
@@ -204,6 +389,11 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 			}
 		}
 
+		/**
+		 * Draws the bounds around the pixel being hovered over
+		 *
+		 * @param g The Graphics object to paint with
+		 */
 		void drawHover(Graphics g) {
 			Graphics2D g2d = (Graphics2D) g;
 			g2d.setColor(Color.WHITE);
@@ -213,11 +403,22 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 			g2d.drawRect(hoverX - (hoverX % scaledZoom), hoverY - (hoverY % scaledZoom), scaledZoom, scaledZoom);
 		}
 
+		/**
+		 * Occurs when the mouse is pressed and released.
+		 *
+		 * @param e The clicking event
+		 */
 		@Override
 		public void mouseClicked(MouseEvent e) {
 
 		}
 
+		/**
+		 * Draws on the image when clicked by sending the event to the ToolChooser's current tool.
+		 *
+		 * @param e The pressing event
+		 * @see com.tylerpackard.tools.Tool#clicked(int, int, java.awt.image.BufferedImage, int, boolean)
+		 */
 		@Override
 		public void mousePressed(MouseEvent e) {
 			mouseX = e.getX();
@@ -228,23 +429,44 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 			newEdit = false;
 		}
 
+		/**
+		 * Notifies the ImageHolder that a new edit should be made when the mouse is released.
+		 *
+		 * @param e The releasing event
+		 */
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			newEdit = true;
 		}
 
+		/**
+		 * Tells the ImageHolder to draw the mouse icon when the mouse is inside itself
+		 *
+		 * @param e The entering event
+		 */
 		@Override
 		public void mouseEntered(MouseEvent e) {
 			mouseInBounds = true;
 			repaint();
 		}
 
+		/**
+		 * Tells the ImageHolder not to draw the mouse icon when the mouse is outside itself
+		 *
+		 * @param e The exiting event
+		 */
 		@Override
 		public void mouseExited(MouseEvent e) {
 			mouseInBounds = false;
 			repaint();
 		}
 
+		/**
+		 * Draws on the image when dragged by sending the event to the ToolChooser's current tool.
+		 *
+		 * @param e The dragging event
+		 * @see com.tylerpackard.tools.Tool#dragged(java.awt.event.MouseEvent, int, int, java.awt.image.BufferedImage, int)
+		 */
 		@Override
 		public void mouseDragged(MouseEvent e) {
 			toolChooser.getSelectedTool().dragged(e, mouseX, mouseY, image, scaledZoom);
@@ -255,6 +477,11 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 			repaint();
 		}
 
+		/**
+		 * Changes the position of the mouse icon and repaints the ImageHolder.
+		 *
+		 * @param e The moving event
+		 */
 		@Override
 		public void mouseMoved(MouseEvent e) {
 			hoverX = e.getX();
@@ -262,16 +489,25 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 			repaint();
 		}
 
+		/**
+		 * Unused, called by the parent Canvas' parent Window
+		 */
 		@Override
 		public void update() {
 
 		}
 
+		/**
+		 * Repositions the ImageHolder inside the parent Canvas
+		 */
 		@Override
 		public void reposition() {
 			setBounds(xPos, yPos, imageWidth, imageHeight);
 		}
 
+		/**
+		 * Unused, would remove focus from focusable objects inside
+		 */
 		@Override
 		public void defocus() {
 
