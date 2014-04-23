@@ -25,6 +25,7 @@ public class Eraser extends Tool{
 		DrawEdit edit = new DrawEdit(this, image);
 		edit.addChange(x / zoom, y / zoom, image.getRGB(x / zoom, y / zoom), fullAlpha);
 		parent.getEditManager().push(edit);
+		newEdit = false;
 	}
 
 	@Override

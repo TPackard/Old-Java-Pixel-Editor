@@ -33,6 +33,7 @@ public class Pencil extends Tool{
 		}
 		edit.addChange(x / zoom, y / zoom, image.getRGB(x / zoom, y / zoom), colorChooser.getColor().getRGB());
 		parent.getEditManager().push(edit);
+		newEdit = false;
 	}
 
 	@Override

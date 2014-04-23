@@ -14,6 +14,7 @@ public class ToolChooser extends JPanel implements Updatable {
 	private Window parent;
 	private final Pencil PENCIL;
 	private final Eraser ERASER;
+	private final Bucket BUCKET;
 	private final ColorPicker PICKER;
 	private final int width;
 	private boolean tempPicker = false;
@@ -29,7 +30,9 @@ public class ToolChooser extends JPanel implements Updatable {
 		add(PENCIL);
 		ERASER = new Eraser(this, 8, 48);
 		add(ERASER);
-		PICKER = new ColorPicker(this, 8, 88, colorChooser);
+		BUCKET = new Bucket(this, 8, 88, colorChooser);
+		add(BUCKET);
+		PICKER = new ColorPicker(this, 8, 128, colorChooser);
 		add(PICKER);
 		selectedTool = PENCIL;
 		PENCIL.select();
@@ -81,8 +84,10 @@ public class ToolChooser extends JPanel implements Updatable {
 		g.drawImage(PENCIL.getIcon(), 8, 8, 32, 32, null);
 		g.drawImage(ERASER.getBG(), 8, 48, 32, 32, null);
 		g.drawImage(ERASER.getIcon(), 8, 48, 32, 32, null);
-		g.drawImage(PICKER.getBG(), 8, 88, 32, 32, null);
-		g.drawImage(PICKER.getIcon(), 8, 88, 32, 32, null);
+		g.drawImage(BUCKET.getBG(), 8, 88, 32, 32, null);
+		g.drawImage(BUCKET.getIcon(), 8, 88, 32, 32, null);
+		g.drawImage(PICKER.getBG(), 8, 128, 32, 32, null);
+		g.drawImage(PICKER.getIcon(), 8, 128, 32, 32, null);
 	}
 
 	public void setTempPicker(boolean tempPicker) {
