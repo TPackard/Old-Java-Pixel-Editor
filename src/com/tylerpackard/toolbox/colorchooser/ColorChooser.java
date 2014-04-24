@@ -7,18 +7,69 @@ import com.tylerpackard.ui.Window;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * The ColorChooser lets the user select a color using sliders, textboxes or arrows. They can either use the RGB system,
+ * or HSB system. The ColorChooser holds two colors, the foreground and background colors. The user can switch between
+ * them by choosing one or the other in the color preview section. The ColorChooser works with a ToolChooser to send
+ * tools the color to use.
+ *
+ * @author Tyler Packard
+ * @version 1
+ * @since 0.0.1
+ */
 public class ColorChooser extends JPanel implements Updatable{
+
+	/**
+	 * The Window that contains the ColorChooser.
+	 */
 	private Window parent;
+
+	/**
+	 * The switch to switch between HSB and RGB color systems.
+	 */
 	private final Switch typeSwitch = new Switch("HSB", "RGB", 60, 16, 72, 16, true);
+
+	/**
+	 * The slider for Hue or Red.
+	 */
 	private final ColorSlider slider1 = new ColorSlider(this, 10, 48, "Hue", 360);
+
+	/**
+	 * The slider for Saturation or Green.
+	 */
 	private final ColorSlider slider2 = new ColorSlider(this, 10, 72, "Saturation", 100);
+
+	/**
+	 * The slider for Brightness or Blue.
+	 */
 	private final ColorSlider slider3 = new ColorSlider(this, 10, 96, "Brightness", 100);
+
+	/**
+	 * The alpha (opacity) slider.
+	 */
 	private final ColorSlider sliderA = new ColorSlider(this, 10, 120, "Alpha", 100);
+
+	/**
+	 * The foreground color.
+	 */
 	private Color foreground = new Color(0x000000);
+
+	/**
+	 * THe background color.
+	 */
 	private Color background = new Color(0xFFFFFF);
+
+	/**
+	 * Whether or not the foreground color is the one currently selected.
+	 */
 	boolean foreSelected = true;
 
 
+	/**
+	 * Creates a new ColorChooser in the specified Window and adds its GUI components to itself.
+	 *
+	 * @param parent The Window that contains it.
+	 */
 	public ColorChooser(Window parent) {
 		super();
 		this.parent = parent;
@@ -35,6 +86,9 @@ public class ColorChooser extends JPanel implements Updatable{
 	}
 
 
+	/**
+	 * Updates the sliders and switches to a different color system if told to do so.
+	 */
 	@Override
 	public void update() {
 		if (typeSwitch.flagged()) {
@@ -46,11 +100,17 @@ public class ColorChooser extends JPanel implements Updatable{
 		sliderA.update();
 	}
 
+	/**
+	 * Repositions itself inside the parent Window.
+	 */
 	@Override
 	public void reposition() {
 		setLocation(0, parent.height() - getHeight());
 	}
 
+	/**
+	 * Updates the colors of the slider bars when the color is changed.
+	 */
 	public void updateColor() {
 		Color color;
 
@@ -75,14 +135,23 @@ public class ColorChooser extends JPanel implements Updatable{
 		repaint();
 	}
 
+	/**
+	 * @return The foreground color
+	 */
 	public Color getForegroundColor() {
 		return foreground;
 	}
 
+	/**
+	 * @return The background color
+	 */
 	public Color getBackgroundColor() {
 		return background;
 	}
 
+	/**
+	 * @return The currently selected color
+	 */
 	public Color getColor() {
 		if (foreSelected) {
 			return foreground;
@@ -91,10 +160,20 @@ public class ColorChooser extends JPanel implements Updatable{
 		}
 	}
 
+	/**
+	 * The same as SetSliders, but doesn't change th alpha value.
+	 *
+	 * @param color The color to set the selected color to
+	 */
 	public void setColor(Color color) {
 		setSliders(color, false);
 	}
 
+	/**
+	 * Sets which color is selected and repaints the sliders.
+	 *
+	 * @param foreSelected Whether or not the foreground color is selected
+	 */
 	public void setForeSelected(boolean foreSelected) {
 		this.foreSelected = foreSelected;
 		if (foreSelected) {
@@ -104,10 +183,22 @@ public class ColorChooser extends JPanel implements Updatable{
 		}
 	}
 
+	/**
+	 * Sets the sliders to the color and retains the alpha.
+	 *
+	 * @param color The color to set the sliders to
+	 */
 	void setSliders(Color color) {
 		setSliders(color, true);
 	}
 
+	/**
+	 * Sets the value of the sliders to each component of the given color. If alpha is true, then the alpha slider is
+	 * set too.
+	 *
+	 * @param color The color to set the sliders to
+	 * @param setAlpha Whether or not to set the alpha slider
+	 */
 	void setSliders(Color color, boolean setAlpha) {
 		if (typeSwitch.getState()) {
 			float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
@@ -124,6 +215,9 @@ public class ColorChooser extends JPanel implements Updatable{
 		}
 	}
 
+	/**
+	 * Switches between the RGB and HSB color systems.
+	 */
 	void switchType() {
 		if (typeSwitch.getState()) {
 			slider1.setLimit(360);
@@ -143,6 +237,13 @@ public class ColorChooser extends JPanel implements Updatable{
 		setForeSelected(foreSelected);
 	}
 
+	/**
+	 * Finds and returns what the color would be if a specified slider was set to the specified value.
+	 *
+	 * @param value The value to use instead of the given slider value
+	 * @param slider The Slider whose value is to replaced by the given one
+	 * @return The resulting color
+	 */
 	Color colorAt(float value, ColorSlider slider) {
 		float value1 = slider1.getValue();
 		float value2 = slider2.getValue();
@@ -166,6 +267,9 @@ public class ColorChooser extends JPanel implements Updatable{
 		}
 	}
 
+	/**
+	 * Removes focus from all of the sliders.
+	 */
 	@Override
 	public void defocus() {
 		slider1.defocus();
