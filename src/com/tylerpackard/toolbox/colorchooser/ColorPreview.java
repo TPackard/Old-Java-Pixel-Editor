@@ -5,10 +5,27 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+/**
+ * The ColorPreview displays the foreground and background colors and lets the user switch between the two.
+ *
+ * @author Tyler Packard
+ * @version 1
+ * @since 0.0.1
+ */
 class ColorPreview extends JPanel implements MouseListener{
+
+	/**
+	 * The ColorChooser that contains this preview and has the foreground and background colors.
+	 */
 	private final ColorChooser parent;
 
 
+	/**
+	 * Creates a new ColorPreview, sets the parent and sets its bounds.
+	 *
+	 * @param parent The containing ColorChooser
+	 * @param y The Y position to place it at
+	 */
 	public ColorPreview(ColorChooser parent, int y) {
 		super();
 		this.parent = parent;
@@ -18,6 +35,11 @@ class ColorPreview extends JPanel implements MouseListener{
 	}
 
 
+	/**
+	 * Paints rectangles of the foreground and background colors and highlights the selected one.
+	 *
+	 * @param graphics The graphics to paint with
+	 */
 	@Override
 	public void paint(Graphics graphics) {
 		Graphics2D g = (Graphics2D) graphics;
@@ -39,6 +61,11 @@ class ColorPreview extends JPanel implements MouseListener{
 		}
 	}
 
+	/**
+	 * Switches between the colors if the unselected color is clicked on.
+	 *
+	 * @param e The clicking event
+	 */
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (parent.foreSelected) {
@@ -56,21 +83,41 @@ class ColorPreview extends JPanel implements MouseListener{
 		}
 	}
 
+	/**
+	 * Occurs when the user presses the mouse.
+	 *
+	 * @param e The pressing event
+	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
 
 	}
 
+	/**
+	 * Occurs when the user releases the mouse.
+	 *
+	 * @param e The releasing event
+	 */
 	@Override
 	public void mouseReleased(MouseEvent e) {
 
 	}
 
+	/**
+	 * Occurs when the mouse enters the ColorPreview.
+	 *
+	 * @param e The entering event
+	 */
 	@Override
 	public void mouseEntered(MouseEvent e) {
 
 	}
 
+	/**
+	 * Occurs when the mouse exits the ColorPreview.
+	 *
+	 * @param e The exiting event
+	 */
 	@Override
 	public void mouseExited(MouseEvent e) {
 
