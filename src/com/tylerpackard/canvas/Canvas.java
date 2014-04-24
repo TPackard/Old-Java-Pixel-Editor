@@ -13,6 +13,9 @@ import java.awt.image.BufferedImage;
  * The Canvas holds the image that's being edited, although the image is stored in a child ImageHolder. The Canvas
  * allows the ImageHolder to be scrolled in any direction if it is larger than the Canvas.
  *
+ * @author Tyler Packard
+ * @version 1
+ * @since 0.0.1
  * @see ImageHolder
  */
 public class Canvas extends JPanel implements Updatable, MouseWheelListener {
