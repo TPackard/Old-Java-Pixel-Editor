@@ -36,7 +36,7 @@ public class Bucket extends Tool {
 	public Bucket(ToolChooser parent, int x, int y, ColorChooser colorChooser) {
 		super(parent, x, y);
 		this.colorChooser = colorChooser;
-		icon = loadImage("pencil");
+		icon = loadImage("bucket");
 		mouse = loadImage("pencil mouse");
 		parent.getParent().getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("A"), "select-bucket");
 		parent.getParent().getActionMap().put("select-bucket", new Shortcut(this));

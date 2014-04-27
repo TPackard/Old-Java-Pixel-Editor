@@ -4,6 +4,9 @@ import com.tylerpackard.ui.Window;
 
 /**
  * The class that starts and runs the program. It contains the Window, which controls its own subsystems.
+ *
+ * @author Tyler Packard
+ * @version 0.0.1 "Leopard"
  */
 public class Main implements Runnable{
 	/**
