@@ -39,7 +39,7 @@ public class Eraser extends Tool{
 
 
 	/**
-	 * Erases the pixel where clicked and adds it to an edit.
+	 * Erases the pixel where clicked and adds it to a new edit.
 	 *
 	 * @param x The X position of the click
 	 * @param y The Y position of the click
