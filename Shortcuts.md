@@ -21,5 +21,4 @@ Shortcuts
 
 ### Undo/Redo
 - `Command-Z` - Undo change
-- `Command-Y` - Redo change
-- `Command-Shift-Z` - Redo change
+- `Command-Y` or `Command-Shift-Z` - Redo change

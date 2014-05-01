@@ -230,6 +230,7 @@ public abstract class Tool extends JPanel implements MouseListener{
 		int longest = Math.abs(width);
 		int shortest = Math.abs(height);
 		int dx1 = 0, dy1 = 0, dx2 = 0, dy2 = 0;
+		boolean wasIn = false;
 
 		if (width < 0) {
 			dx1 = -1;
@@ -258,7 +259,7 @@ public abstract class Tool extends JPanel implements MouseListener{
 
 		int numerator = longest >> 1;
 		for (int i = 0; i <= longest; i++) {
-			edit.addChange(x, y, image.getRGB(x, y), rgb);
+			wasIn = drawPoint(x, y, wasIn, image, rgb, edit);
 			numerator += shortest;
 			if (numerator >= longest) {
 				numerator -= longest;
@@ -269,6 +270,43 @@ public abstract class Tool extends JPanel implements MouseListener{
 				y += dy2;
 			}
 		}
+	}
+
+	/**
+	 * Draws a point of a line if it's legal. Only called by the drawLine method.
+	 *
+	 * @param x The X position of the drawing
+	 * @param y The Y position of the drawing
+	 * @param wasIn Whether or not the last point drawn was inside the bounds
+	 * @param image The image to edit
+	 * @param rgb The color to use
+	 */
+	private boolean drawPoint(int x, int y, boolean wasIn, BufferedImage image, int rgb, DrawEdit edit) {
+		if (x < 0) {
+			if (wasIn) {
+				edit.addChange(0, y, image.getRGB(0, y), rgb);
+				wasIn = false;
+			}
+		} else if (x >= image.getWidth()) {
+			if (wasIn) {
+				edit.addChange(image.getWidth() - 1, y, image.getRGB(image.getWidth() - 1, y), rgb);
+				wasIn = false;
+			}
+		} else if (y < 0) {
+			if (wasIn) {
+				edit.addChange(x, 0, image.getRGB(x, 0), rgb);
+				wasIn = false;
+			}
+		} else if (y >= image.getHeight()) {
+			if (wasIn) {
+				edit.addChange(x, image.getHeight() - 1, image.getRGB(x, image.getHeight() - 1), rgb);
+				wasIn = false;
+			}
+		} else {
+			edit.addChange(x, y, image.getRGB(x, y), rgb);
+			wasIn = true;
+		}
+		return wasIn;
 	}
 
 	/**
