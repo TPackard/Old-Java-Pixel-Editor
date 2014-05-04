@@ -37,7 +37,7 @@ public class Bucket extends Tool {
 		super(parent, x, y);
 		this.colorChooser = colorChooser;
 		icon = loadImage("bucket");
-		mouse = loadImage("pencil mouse");
+		mouse = loadImage("bucket mouse");
 		parent.getParent().getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("A"), "select-bucket");
 		parent.getParent().getActionMap().put("select-bucket", new Shortcut(this));
 	}
@@ -67,7 +67,7 @@ public class Bucket extends Tool {
 		DrawEdit edit = new DrawEdit(this, image);
 
 		LinkedList<Point> points = new LinkedList<>();
-		points.add(new Point(x, y));
+		points.add(new Point(x / zoom, y / zoom));
 
 		while (!points.isEmpty()) {
 			Point p = points.remove();
@@ -95,7 +95,12 @@ public class Bucket extends Tool {
 	@Override
 	public void drawMouse(Graphics g, int x, int y) {
 		g.setColor(colorChooser.getColor());
-		g.fillRect(x + 1, y - 3, 3, 3);
-		g.drawImage(mouse, x, y - 31, 32, 32, null);
+		g.fillRect(x, y - 7, 2, 4);
+		g.fillRect(x + 2, y - 8, 14, 4);
+		g.fillRect(x + 4, y - 5, 5, 3);
+		g.fillRect(x + 5, y - 10, 10, 2);
+		g.fillRect(x + 8, y - 12, 6, 2);
+		g.fillRect(x + 4, y - 9, 1, 1);
+		g.drawImage(mouse, x - 1, y - 27, 32, 32, null);
 	}
 }
