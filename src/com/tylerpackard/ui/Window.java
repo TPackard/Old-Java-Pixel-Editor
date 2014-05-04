@@ -85,11 +85,10 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 	public Boolean hasRetina = null;
 
 	/**
-	* Creates a new Window object with the specified height and width and puts it in its own
-	* <code>JFrame</code>. It creates and adds a new <code>ColorChooser</code>, <code>ToolChooser</code>, and
-	* <code>Canvas</code> to itself and also creates its own <code>EditManager</code> and <code>NewFileDialog</code>.
-	* It adds a component and fullscreen listener and enables the capability to go fullscreen on Macs. It also
-	* binds many keys to various shortcuts for file I/O, editing, and zooming.
+	* Creates a new Window object with the specified height and width and puts it in its own JFrame. It creates and
+	* adds a new ColorChooser, ToolChooser, and Canvas to itself and also creates its own EditManager and NewFileDialog.
+	* It adds a component and fullscreen listener and enables the capability to go fullscreen on Macs. It also binds
+	* many keys to various shortcuts for file I/O, editing, and zooming.
 	*
 	* @param width	Specifies the starting width of the window
 	* @param height	Specifies the starting height of the window
@@ -300,6 +299,13 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 	}
 
 	/**
+	 * @return Whether or not numbers are being typed.
+	 */
+	public boolean isTypingNumbers() {
+		return colorChooser.isTypingNumbers();
+	}
+
+	/**
 	 * It gives the given Updatable focus. It does this by removing focus from all Updatables except for the given one.
 	 *
 	 * @param updatable The Updatable to give focus to
@@ -442,6 +448,7 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 	 * @see ImageIO#write(java.awt.image.RenderedImage, String, File)
 	 */
 	void save() {
+		toolChooser.setTempPicker(false);
 		File file;
 		int option = fileChooser.showSaveDialog(this);
 		if (option == JFileChooser.APPROVE_OPTION) {
@@ -488,6 +495,7 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 	 * @see ImageIO#read(File)
 	 */
 	void open() {
+		toolChooser.setTempPicker(false);
 		File file;
 		int option = fileChooser.showOpenDialog(this);
 		if (option == JFileChooser.APPROVE_OPTION) {

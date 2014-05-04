@@ -258,7 +258,13 @@ class ColorSlider extends JPanel implements MouseListener, MouseMotionListener {
 
 		focusAdapter = new FocusAdapter() {
 			@Override
+			public void focusGained(FocusEvent e) {
+				parent.typingNumbers = true;
+			}
+
+			@Override
 			public void focusLost(FocusEvent e) {
+				parent.typingNumbers = false;
 				double value = Float.parseFloat(textField.getText());
 				if (value > limit) {
 					value = (double) limit;

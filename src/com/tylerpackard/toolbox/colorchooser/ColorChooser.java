@@ -64,6 +64,11 @@ public class ColorChooser extends JPanel implements Updatable{
 	 */
 	boolean foreSelected = true;
 
+	/**
+	 * Whether or not the user is currently typing numbers.
+	 */
+	boolean typingNumbers = false;
+
 
 	/**
 	 * Creates a new ColorChooser in the specified Window and adds its GUI components to itself.
@@ -147,6 +152,13 @@ public class ColorChooser extends JPanel implements Updatable{
 	 */
 	public Color getBackgroundColor() {
 		return background;
+	}
+
+	/**
+	 * @return Whether or not the user is currently typing numbers.
+	 */
+	public boolean isTypingNumbers() {
+		return typingNumbers;
 	}
 
 	/**
@@ -276,5 +288,6 @@ public class ColorChooser extends JPanel implements Updatable{
 		slider2.defocus();
 		slider3.defocus();
 		sliderA.defocus();
+		typingNumbers = false;
 	}
 }

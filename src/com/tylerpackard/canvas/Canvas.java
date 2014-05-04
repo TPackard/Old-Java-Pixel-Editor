@@ -128,7 +128,9 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 	 * @see ImageHolder#setZoom(int)
 	 */
 	public void setZoom(int zoomFactor) {
-		imageHolder.setZoom(zoomFactor);
+		if (!parent.isTypingNumbers()) {
+			imageHolder.setZoom(zoomFactor);
+		}
 	}
 
 	/**
