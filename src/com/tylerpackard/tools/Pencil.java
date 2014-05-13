@@ -24,6 +24,16 @@ public class Pencil extends Tool{
 	 */
 	private ColorChooser colorChooser;
 
+	/**
+	 * The X position of the previous click.
+	 */
+	private int prevX;
+
+	/**
+	 * The Y position of the previous click.
+	 */
+	private int prevY;
+
 
 	/**
 	 * Creates a new Pencil, sets the ColorChooser and images, and sets the shortcut.
@@ -46,23 +56,25 @@ public class Pencil extends Tool{
 	/**
 	 * Draws on the pixel where clicked with the selected color of the ColorChooser and adds it to a new edit.
 	 *
-	 * @param x The X position of the click
-	 * @param y The Y position of the click
+	 * @param e The mouse clicking event
 	 * @param image The image to edit
 	 * @param zoom How far the image is zoomed in
-	 * @param newEdit Whether or not to make a new edit
 	 */
 	@Override
-	public void clicked(int x, int y, BufferedImage image, int zoom, boolean newEdit) {
-		DrawEdit edit;
-		if (newEdit) {
-			edit = new DrawEdit(this, image);
-		} else {
-			edit = (DrawEdit) parent.getEditManager().peek();
-		}
-		edit.addChange(x / zoom, y / zoom, image.getRGB(x / zoom, y / zoom), colorChooser.getColor().getRGB());
+	public void clicked(MouseEvent e, BufferedImage image, int zoom) {
+		DrawEdit edit = new DrawEdit(this, image);
 		parent.getEditManager().push(edit);
-		newEdit = false;
+
+		if (e.isShiftDown()) {
+			drawLine(e, prevX, prevY, image, colorChooser.getColor().getRGB(), zoom);
+		} else {
+			int x = e.getX() / zoom;
+			int y = e.getY() / zoom;
+			edit.addChange(x, y, image.getRGB(x, y), colorChooser.getColor().getRGB());
+		}
+
+		prevX = e.getX();
+		prevY = e.getY();
 	}
 
 	/**
@@ -76,6 +88,8 @@ public class Pencil extends Tool{
 	 */
 	@Override
 	public void dragged(MouseEvent e, int x, int y, BufferedImage image, int zoom) {
+		prevX = e.getX();
+		prevY = e.getY();
 		drawLine(e, x, y, image, colorChooser.getColor().getRGB(), zoom);
 	}
 

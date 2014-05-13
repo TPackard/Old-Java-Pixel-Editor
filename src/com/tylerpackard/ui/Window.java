@@ -134,6 +134,9 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 		getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("meta shift pressed Z"), "redo");
 		getActionMap().put("redo", new Redo(editManager));
 
+		getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke('`'), "switch-zoom");
+		getActionMap().put("switch-zoom", new SwitchZoom(canvas));
+
 		for (int i = 1; i <= 5; i++) {
 			String num = Integer.toString(i);
 			getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(num), "zoom" + num);
@@ -562,6 +565,22 @@ public class Window extends JComponent implements FullScreenListener, ComponentL
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			canvas.setZoom(zoomFactor);
+		}
+	}
+
+	/**
+	 * An action that switches to the previous zoom level in the Canvas when the user uses a new shortcut.
+	 */
+	private static class SwitchZoom extends AbstractAction {
+		private Canvas canvas;
+
+		public SwitchZoom(Canvas canvas) {
+			this.canvas = canvas;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			canvas.switchZoom();
 		}
 	}
 

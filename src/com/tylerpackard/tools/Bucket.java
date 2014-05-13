@@ -6,6 +6,7 @@ import com.tylerpackard.toolbox.toolchooser.ToolChooser;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
@@ -48,26 +49,27 @@ public class Bucket extends Tool {
 	 * stores points in a linked-list instead of using recursion to prevent stack overflow errors when filling large
 	 * sections.
 	 *
-	 * @param x X position of the click
-	 * @param y Y position of the click
+	 * @param e The mouse event
 	 * @param image The image being edited
 	 * @param zoom How far the image has been zoomed in
-	 * @param newEdit Whether or not to make a new edit - Unused, this will always make a new edit
 	 */
 	@Override
-	public void clicked(int x, int y, BufferedImage image, int zoom, boolean newEdit) {
-		if (colorChooser.getColor().getRGB() == image.getRGB(x / zoom, y / zoom)) {
+	public void clicked(MouseEvent e, BufferedImage image, int zoom) {
+		int x = e.getX() / zoom;
+		int y = e.getY() / zoom;
+
+		if (colorChooser.getColor().getRGB() == image.getRGB(x, y)) {
 			return;
 		}
 
 		int imageWidth = image.getWidth();
 		int imageHeight = image.getHeight();
-		int targetRGB = image.getRGB(x / zoom, y / zoom);
+		int targetRGB = image.getRGB(x, y);
 		int newRGB = colorChooser.getColor().getRGB();
 		DrawEdit edit = new DrawEdit(this, image);
 
 		LinkedList<Point> points = new LinkedList<>();
-		points.add(new Point(x / zoom, y / zoom));
+		points.add(new Point(x, y));
 
 		while (!points.isEmpty()) {
 			Point p = points.remove();

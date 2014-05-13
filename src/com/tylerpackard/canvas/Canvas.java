@@ -69,6 +69,21 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 	 */
 	private boolean mouseInBounds;
 
+	/**
+	 * The last zoom level.
+	 */
+	private int lastZoom = 1;
+
+	/**
+	 * The last X position of the scroll in the previous zoom level.
+	 */
+	private int lastScrollX = 0;
+
+	/**
+	 * The last Y position of the scroll in the previous zoom level.
+	 */
+	private int lastScrollY = 0;
+
 
 	/**
 	 * Sets the parent Window and ToolChooser to get tools from, and sets itself up.
@@ -129,8 +144,17 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 	 */
 	public void setZoom(int zoomFactor) {
 		if (!parent.isTypingNumbers()) {
+			lastZoom = imageHolder.zoomFactor;
+			lastScrollX = scrollX;
+			lastScrollY = scrollY;
 			imageHolder.setZoom(zoomFactor);
 		}
+	}
+
+	public void switchZoom() {
+		setZoom(lastZoom);
+		scrollX = lastScrollX;
+		scrollY = lastScrollY;
 	}
 
 	/**
@@ -259,11 +283,6 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 		 * The Y position of the ImageHolder in the Canvas
 		 */
 		private int yPos;
-
-		/**
-		 * Whether or not to make a new edit or append the last one
-		 */
-		private boolean newEdit = true;
 
 
 		/**
@@ -422,13 +441,13 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 		 * Draws on the image when clicked by sending the event to the ToolChooser's current tool.
 		 *
 		 * @param e The pressing event
-		 * @see com.tylerpackard.tools.Tool#clicked(int, int, java.awt.image.BufferedImage, int, boolean)
+		 * @see com.tylerpackard.tools.Tool#clicked(MouseEvent, java.awt.image.BufferedImage, int, boolean)
 		 */
 		@Override
 		public void mousePressed(MouseEvent e) {
 			mouseX = e.getX();
 			mouseY = e.getY();
-			toolChooser.getSelectedTool().clicked(mouseX, mouseY, image, scaledZoom, newEdit);
+			toolChooser.getSelectedTool().clicked(e, image, scaledZoom);
 			parent.parent.requestFocus(parent);
 			repaint();
 		}
@@ -440,7 +459,7 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 		 */
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			newEdit = true;
+
 		}
 
 		/**
@@ -469,7 +488,7 @@ public class Canvas extends JPanel implements Updatable, MouseWheelListener {
 		 * Draws on the image when dragged by sending the event to the ToolChooser's current tool.
 		 *
 		 * @param e The dragging event
-		 * @see com.tylerpackard.tools.Tool#dragged(java.awt.event.MouseEvent, int, int, java.awt.image.BufferedImage, int)
+		 * @see com.tylerpackard.tools.Tool#dragged(MouseEvent, int, int, BufferedImage, int)
 		 */
 		@Override
 		public void mouseDragged(MouseEvent e) {

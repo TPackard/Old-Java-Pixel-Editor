@@ -323,7 +323,7 @@ class ColorSlider extends JPanel implements MouseListener, MouseMotionListener {
 	 * @see ColorChooser#colorAt(float, ColorSlider)
 	 */
 	public void paintBar() {
-		final int sliverWidth = 3;
+		final int sliverWidth = 1;
 		barG.drawImage(barBackground, 0, 0, null);
 		for (int i = 0; i < barEnd - barStart; i += sliverWidth) {
 			barG.setColor(parent.colorAt((i / (float) scale) / (float) limit, this));

@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 /**
@@ -51,15 +52,13 @@ public class ColorPicker extends Tool {
 	/**
 	 * Sets the color of the ColorChooser to the color of the pixel clicked on.
 	 *
-	 * @param x The X position of the click
-	 * @param y The Y position of the click
+	 * @param e The mouse event
 	 * @param image The image to edit
 	 * @param zoom How much the image is zoomed in
-	 * @param newEdit Whether or not to make a new edit
 	 */
 	@Override
-	public void clicked(int x, int y, BufferedImage image, int zoom, boolean newEdit) {
-		colorChooser.setColor(new Color(image.getRGB(x / zoom, y / zoom)));
+	public void clicked(MouseEvent e, BufferedImage image, int zoom) {
+		colorChooser.setColor(new Color(image.getRGB(e.getX() / zoom, e.getY() / zoom)));
 	}
 
 

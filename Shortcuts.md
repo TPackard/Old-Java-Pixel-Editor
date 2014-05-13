@@ -1,6 +1,10 @@
 Shortcuts
 =========
 
+### Drawing
+- `Left Click` - Draw on pixel
+- `Left Drag` or `Shift-Left Click` - Draw line
+
 ### Tools
 - `Q` - Color picker
 - `W` - Pencil
@@ -13,6 +17,7 @@ Shortcuts
 - `Command-N` - New file
 
 ### Zoom
+- `~` - Switch back to last zoom level
 - `1` - 100% Zoom
 - `2` - 200% Zoom
 - `3` - 400% Zoom

@@ -188,13 +188,11 @@ public abstract class Tool extends JPanel implements MouseListener{
 	/**
 	 * Occurs when the Canvas is clicked. Should be overridden unless the tool shouldn't do anything on a click.
 	 *
-	 * @param x The X position of the click
-	 * @param y The Y position of the click
+	 * @param e The mouse clicking event
 	 * @param image The image to edit
 	 * @param rgb The color to use
-	 * @param newEdit Whether or not to make a new edit
 	 */
-	public void clicked(int x, int y, BufferedImage image, int rgb, boolean newEdit) {}
+	public void clicked(MouseEvent e, BufferedImage image, int rgb) {}
 
 	/**
 	 * Occurs when the mouse is dragged over the Canvas. Should be overridden unless the tool shouldn't do anything

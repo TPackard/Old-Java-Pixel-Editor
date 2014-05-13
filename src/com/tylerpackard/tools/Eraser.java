@@ -14,12 +14,22 @@ import java.awt.image.BufferedImage;
  * @version 1
  * @since 0.0.1
  */
-public class Eraser extends Tool{
+public class Eraser extends Tool {
 
 	/**
 	 * The hexadecimal value of a color that's all alpha.
 	 */
 	private final int fullAlpha = 0x1010101;
+
+	/**
+	 * The X position of the previous click.
+	 */
+	private int prevX;
+
+	/**
+	 * The Y position of the previous click.
+	 */
+	private int prevY;
 
 
 	/**
@@ -41,18 +51,25 @@ public class Eraser extends Tool{
 	/**
 	 * Erases the pixel where clicked and adds it to a new edit.
 	 *
-	 * @param x The X position of the click
-	 * @param y The Y position of the click
+	 * @param e The mouse event
 	 * @param image The image to edit
 	 * @param zoom How far the image is zoomed in
-	 * @param newEdit Whether or not to make a new edit
 	 */
 	@Override
-	public void clicked(int x, int y, BufferedImage image, int zoom, boolean newEdit) {
+	public void clicked(MouseEvent e, BufferedImage image, int zoom) {
 		DrawEdit edit = new DrawEdit(this, image);
-		edit.addChange(x / zoom, y / zoom, image.getRGB(x / zoom, y / zoom), fullAlpha);
 		parent.getEditManager().push(edit);
-		newEdit = false;
+
+		if (e.isShiftDown()) {
+			drawLine(e, prevX, prevY, image, fullAlpha, zoom);
+		} else {
+			int x = e.getX() / zoom;
+			int y = e.getY() / zoom;
+			edit.addChange(x, y, image.getRGB(x, y), fullAlpha);
+		}
+
+		prevX = e.getX();
+		prevY = e.getY();
 	}
 
 	/**
